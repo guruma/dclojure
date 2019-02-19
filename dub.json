@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"박상규"
+	],
+	"copyright": "Copyright © 2019, 박상규",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "dclojure"
+}
