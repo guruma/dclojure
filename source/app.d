@@ -1,12 +1,9 @@
 import 	std.stdio, 
-	std.process,
 	std.string, 
 	std.path, 
-	std.process, 
-	std.algorithm;
+	std.process,
+	std.algorithm,
 	core.sys.posix.sys.stat;
-
-import std.stdio, std.string, std.path, std.process, std.algorithm;
 
 
 void main()
