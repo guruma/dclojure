@@ -1,9 +1,9 @@
-import 	std.stdio, 
-	std.string, 
-	std.path, 
-	std.process,
-	std.algorithm,
-	core.sys.posix.sys.stat;
+import  std.stdio, 
+        std.string, 
+        std.path, 
+        std.process,
+        std.algorithm,
+        core.sys.posix.sys.stat;
 
 
 void main()
@@ -20,7 +20,7 @@ void main()
     string paths = environment.get("PATH");
 
     foreach (path; paths.split(pathSeparator).map!(path => asAbsolutePath(path))) {
-      writeln(path);
+        writeln(path);
     }
 
     if(test_file('e', "dclojure")) writeln("exist");
@@ -36,16 +36,16 @@ bool test_file(char opt, string fname)
     }
 
     if (is_exist) {
-	switch(opt) {
-	case 'f':
-	    return (0 != (st.st_mode & S_IFREG));
-	case 'x':
-	    return (0 != (st.st_mode & S_IXUSR));
-	case 'd':
-	    return (0 != (st.st_mode & S_IFDIR));
-	default:
-	    break;
-	}
+        switch(opt) {
+            case 'f':
+                return (0 != (st.st_mode & S_IFREG));
+            case 'x':
+                return (0 != (st.st_mode & S_IXUSR));
+            case 'd':
+                return (0 != (st.st_mode & S_IFDIR));
+            default:
+                break;
+        }
     }
 
     return false;
