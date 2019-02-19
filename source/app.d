@@ -19,7 +19,8 @@ void main()
 
     string paths = environment.get("PATH");
 
-    foreach (path; paths.split(pathSeparator).map!(path => asAbsolutePath(path))) {
+    foreach (path; paths.split(pathSeparator).map!(path => asAbsolutePath(path)))
+    {
         writeln(path);
     }
 
@@ -31,12 +32,15 @@ bool test_file(char opt, string fname)
     stat_t st;
     bool is_exist = (0 == stat(cast(char*)fname, &st));
 
-    if('e' == opt) {
-      return is_exist;
+    if('e' == opt)
+    {
+        return is_exist;
     }
 
-    if (is_exist) {
-        switch(opt) {
+    if (is_exist) 
+    {
+        switch(opt) 
+        {
             case 'f':
                 return (0 != (st.st_mode & S_IFREG));
             case 'x':
