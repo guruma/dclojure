@@ -1,6 +1,13 @@
-import std.stdio;
+import std.stdio, std.process;
 
 void main()
 {
-	writeln("Edit source/app.d to start your project.");
+    auto home = environment.get("HOME");
+    writeln("HOME = ", home); 
+
+    auto javaHome = environment.get("JAVA_HOME");
+    writeln("JAVA_HOME = ", javaHome);
+
+    auto pwd = environment.get("PWD");
+    writeln("PWD = ", pwd);
 }
