@@ -1,7 +1,7 @@
 {
-	"name": "dclojure",
-	"description": "Clojure CLI written in D.",
+  "name": "dclojure",
+  "description": "Clojure CLI written in D.",
   "authors": ["guruma <psk810@gmail.com>", "philoskim <philos99@gmail.com>"],
-	"copyright": "Copyright © 2019, guruma and philoskim",
-	"license": "Distributed under the Eclipse Public License either version 1.0 or any later version."	
+  "copyright": "Copyright © 2019, guruma and philoskim",
+  "license": "Distributed under the Eclipse Public License either version 1.0 or any later version."	
 }
