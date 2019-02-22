@@ -31,7 +31,7 @@ Opts opts;
 
 void main(string[] args)
 {
-    test1();
+    test1(args);
     //test2();
 }
 
@@ -45,7 +45,7 @@ void test2()
     printf("isExec   : %d\n", f.isExec);
 }
 
-void test1()
+void test1(string[] args)
 {
     auto home = environment.get("HOME");
     writeln("HOME = ", home); 
