@@ -5,5 +5,7 @@
 	"copyright": "Copyright © 2019, 박상규",
 	"description": "A minimal D application.",
 	"license": "proprietary",
-	"name": "dclojure"
+	"name": "dclojure",
+        "dflags-posix": ["-version=POSIX"],
+        "dflags-windows": ["-version=WINDOWS"]
 }
