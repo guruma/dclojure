@@ -1,5 +1,5 @@
 # execuatables
-dclojure
+/dclojure
 
 # Compiled Object files
 *.o
