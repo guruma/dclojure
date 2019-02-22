@@ -6,6 +6,6 @@
 	"description": "A minimal D application.",
 	"license": "proprietary",
 	"name": "dclojure",
-        "dflags-posix": ["-version=POSIX"],
-        "dflags-windows": ["-version=WINDOWS"]
+        "versions-posix": ["POSIX"],
+        "versions-windows": ["WINDOWS"]
 }
