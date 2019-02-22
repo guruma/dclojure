@@ -6,8 +6,30 @@ import  std.stdio,
         core.sys.posix.sys.stat,
         dclojure.file;
 
+struct Opts
+{
+    string[] jvmOpts = [];
+    string[] resolveAliases = [];
+    string[] classpathAliases = [];
+    string[] jvmAliases = [];
+    string[] mainAliases = ["1", "2", "3"];
+    string[] allAliases = [];
+    string depsData = "";
+    string forceCp = "";
+    bool printClasspath = false;
+    bool verbose = false;
+    bool describe = false;
+    bool force = false;
+    bool repro = false;
+    bool tree = false;
+    bool pom = false;
+    bool resolveTags = false;
+    bool help = false;
+}
 
-void main()
+Opts opts;
+
+void main(string[] args)
 {
     auto home = environment.get("HOME");
     writeln("HOME = ", home); 
@@ -29,7 +51,63 @@ void main()
  
     runJava("/usr/bin/java -version");
     writeln("configDir = ", configDir());
+
+    Opts opts = parseArgs(args.remove(0));
+    writeln("opts = ", opts);
  }
+
+Opts parseArgs(string[] args)
+{
+    Opts opts;
+
+    for (int i=0; i < args.length; i++)
+    {
+        string arg = args[i];
+
+        if (startsWith(arg, "-J"))
+            opts.jvmOpts ~= arg[2 .. $];
+        else if (startsWith(arg, "-R"))
+            opts.resolveAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-C"))
+            opts.classpathAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-O"))
+            opts.jvmAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-M"))
+            opts.mainAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-A"))
+            opts.allAliases ~= arg[2 .. $];
+        else if (arg == "-Sdeps")
+            opts.depsData = args[++i];
+        else if (arg == "-Scp")
+            opts.forceCp = args[++i];
+        else if (arg == "-Spath")
+            opts.printClasspath = true;
+        else if (arg == "-Sverbose")
+            opts.verbose= true;
+        else if (arg == "-Sdescribe")
+            opts.describe = true;
+        else if (arg == "-Sforce")
+            opts.force = true;
+        else if (arg == "-Srepro")
+            opts.repro = true;
+        else if (arg == "-Stree")
+            opts.tree = true;
+        else if (arg == "-Spom")
+            opts.pom = true;
+        else if (arg == "-Sresolve-tags")
+            opts.resolveTags = true;
+        else if (arg == "-h" || arg == "--help" || arg == "-?")
+        {
+            if (opts.mainAliases.length > 0 || opts.allAliases.length > 0)
+                break;
+            else
+                opts.help = true;
+        } 
+        else
+            writeln("Invalid option: ", arg);
+    }
+    return opts;
+}
 
 void runJava(string cmd)
 {
