@@ -52,7 +52,7 @@ void main(string[] args)
     runJava("/usr/bin/java -version");
     writeln("configDir = ", configDir());
 
-    Opts opts = parseArgs(args.remove(0));
+    opts = parseArgs(args.remove(0));
     writeln("opts = ", opts);
  }
 
