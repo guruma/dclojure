@@ -136,12 +136,12 @@ string configDir()
 }
 
 string helpMessage = q"END
-Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
-       clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
+       dclj     [dep-opt*] [init-opt*] [main-opt] [arg*]
 
-The clojure script is a runner for Clojure. clj is a wrapper
-for interactive repl use. These scripts ultimately construct and
-invoke a command-line of the form:
+dclojure is a runner for Clojure written in the D language.
+dclj is a wrapper for interactive repl use. 
+These programs ultimately construct and invoke a command-line of the form:
 
 java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
 
