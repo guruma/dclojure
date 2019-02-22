@@ -29,7 +29,7 @@ bool isExec(string fname)
 
     version (Windows)
     {
-        import core.sys.windows.sys.stat;
+        import core.sys.windows.stat;
         struct_stat st;
 
         isExist = (0 == stat(cast(char*)fname, &st));
