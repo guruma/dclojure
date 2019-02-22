@@ -47,8 +47,8 @@ string configDir()
     if (dir != "")
         return buildPath(dir, "clojure");
     
-    version (POSIX) dir = environment.get("HOME");
-    version (WINDOWS) dir = environment.get("HOMEDRIVE") ~ environment.get("HOMEPATH");
+    version (Posix) dir = environment.get("HOME");
+    version (Windows) dir = environment.get("HOMEDRIVE") ~ environment.get("HOMEPATH");
     if (dir != "")
         return buildPath(dir, ".clojure");
     else
