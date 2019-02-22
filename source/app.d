@@ -31,6 +31,22 @@ Opts opts;
 
 void main(string[] args)
 {
+    test1();
+    //test2();
+}
+
+void test2()
+{
+    auto f = "dclojure";
+
+    printf("exists   : %d\n", f.exists);
+    printf("isDir    : %d\n", f.isDir);
+    printf("isFile   : %d\n", f.isFile);
+    printf("isExec   : %d\n", f.isExec);
+}
+
+void test1()
+{
     auto home = environment.get("HOME");
     writeln("HOME = ", home); 
 

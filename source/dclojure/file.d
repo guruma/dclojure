@@ -10,14 +10,14 @@ bool exists(R)(R name)
     return std.file.exists(name);
 }
 
-@property bool isDir(R)(R name)
+bool isDir(R)(R name)
 if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) && !isConvertibleToString!R)
 {
     static import std.file;
     return std.file.isDir(name);
 }
 
-@property bool isFile(R)(R name)
+bool isFile(R)(R name)
 {
     static import std.file;
     return std.file.isFile(name);
