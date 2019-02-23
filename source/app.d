@@ -3,7 +3,6 @@ import  std.stdio,
         std.path, 
         std.process,
         std.algorithm,
-        core.sys.posix.sys.stat,
         dclojure.file;
 
 struct Opts
@@ -32,7 +31,7 @@ Opts opts;
 void main(string[] args)
 {
     test1(args);
-    //test2();
+    test2();
 }
 
 void test2()

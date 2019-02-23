@@ -4,24 +4,8 @@ import  std.stdio,
         std.range.primitives,
         std.traits;
 
-bool exists(R)(R name)
-{
-    static import std.file;
-    return std.file.exists(name);
-}
+public import std.file: exists, isDir, isFile; 
 
-bool isDir(R)(R name)
-if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) && !isConvertibleToString!R)
-{
-    static import std.file;
-    return std.file.isDir(name);
-}
-
-bool isFile(R)(R name)
-{
-    static import std.file;
-    return std.file.isFile(name);
-}
 
 bool isExec(string fname)
 {
