@@ -1,8 +1,6 @@
 module dclojure.file;
 
-import  std.stdio,
-        std.range.primitives,
-        std.traits;
+import  std.string;
 
 public import std.file: exists, isDir, isFile; 
 
@@ -16,7 +14,7 @@ bool isExec(string fname)
         import core.sys.windows.stat;
         struct_stat st;
 
-        isExist = (0 == stat(cast(char*)fname, &st));
+        isExist = (0 == stat(fname.toStringz, &st));
 
         if( ! isExist ) 
             return false;
@@ -28,7 +26,7 @@ bool isExec(string fname)
         import core.sys.posix.sys.stat;
         stat_t st;
 
-        isExist = (0 == stat(cast(char*)fname, &st));
+        isExist = (0 == stat(fname.toStringz, &st));
 
         if( ! isExist ) 
             return false;
