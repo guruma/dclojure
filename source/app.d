@@ -1,9 +1,10 @@
 import  std.stdio, 
         std.string, 
         std.path, 
-        std.process,
         std.algorithm,
         dclojure.file;
+
+import  std.process : env = environment, executeShell;
 
 struct Opts
 {
@@ -30,8 +31,9 @@ Opts opts;
 
 void main(string[] args)
 {
-    test1(args);
-    test2();
+    //test1(args);
+    //test2();
+    writeln(constructLocationOfCachedFiles());
 }
 
 void test2()
@@ -46,16 +48,16 @@ void test2()
 
 void test1(string[] args)
 {
-    auto home = environment.get("HOME");
+    auto home = env.get("HOME");
     writeln("HOME = ", home); 
 
-    auto javaHome = environment.get("JAVA_HOME");
+    auto javaHome = env.get("JAVA_HOME");
     writeln("JAVA_HOME = ", javaHome);
 
-    auto pwd = environment.get("PWD");
+    auto pwd = env.get("PWD");
     writeln("PWD = ", pwd);
 
-    string paths = environment.get("PATH");
+    string paths = env.get("PATH");
 
     foreach (path; paths.split(pathSeparator).map!(path => asAbsolutePath(path)))
     {
@@ -126,25 +128,66 @@ Opts parseArgs(string[] args)
     return opts;
 }
 
+string findJava()
+{
+    return "/usr/bin/java";
+}
+
+void resolveTags()
+{
+}
+
+string determinCacheDir()
+{
+    return "";
+}
+
+string makeToolsArgs()
+{
+    return "";
+}
+
+string makeClasspath()
+{
+    return "";
+}
+
+//string constructLocationOfCachedFiles(string resolvedAliases, string classpathAliases, string allAliases, string vmAliases, string mainAliases, string depsData, string configPath)
+string constructLocationOfCachedFiles()
+{
+    import std.digest.crc;
+    import std.conv;
+    //return "";
+    //return "abc".crc32Of().text();
+    ubyte[4] hash = "abc\n".crc32Of();
+    uint u = hash[3] <<  0 |
+	     hash[2] <<  8 |
+	     hash[1] << 16 |
+	     hash[0] << 24;
+
+    return u.text();
+}
+
 void runJava(string cmd)
 {
     auto ls = executeShell(cmd);
-    writeln(ls.output);
+    writeln(ls);
 }
 
 string configDir()
 {
-    string dir = environment.get("CLJ_CONFIG");
-    if (dir != "")
+    string dir = env.get("CLJ_CONFIG");
+    if (! dir.empty)
         return dir;
 
-    dir = environment.get("XDG_CONFIG_HOME");
-    if (dir != "")
+    dir = env.get("XDG_CONFIG_HOME");
+    if (! dir.empty)
         return buildPath(dir, "clojure");
     
-    version (Posix) dir = environment.get("HOME");
-    version (Windows) dir = environment.get("HOMEDRIVE") ~ environment.get("HOMEPATH");
-    if (dir != "")
+    version (Posix) dir = env.get("HOME");
+    version (Windows) dir = env.get("HOMEDRIVE") ~ env.get("HOMEPATH");
+
+    if (! dir.empty)
         return buildPath(dir, ".clojure");
     else
         return dir;
