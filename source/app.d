@@ -2,7 +2,8 @@ import  std.stdio,
         std.string, 
         std.path, 
         std.algorithm,
-        dclojure.file;
+        dclojure.file,
+        std.array;
 
 import  std.process : env = environment, executeShell;
 
@@ -31,9 +32,51 @@ Opts opts;
 
 void main(string[] args)
 {
-    //test1(args);
-    //test2();
-    writeln(constructLocationOfCachedFiles());
+   // test1(args);
+   // test2();
+   string s = findJavaCmd();
+   writeln("JavaCmd = ", s);
+}
+
+string findCmdPath(string cmd)
+{
+    string envPath = environment.get("PATH");
+    
+    string cmdPath;
+    foreach (path; envPath.split(pathSeparator))
+    {
+        cmdPath = buildPath(absolutePath(path), cmd);
+        if (cmdPath.isExec)
+            break;
+        else
+            cmdPath = null; 
+    }
+
+    if (cmdPath)
+      return cmdPath;
+    else
+      return null; 
+}
+
+string findJavaCmd()
+{
+    version (Posix) string javaCmd = "java";
+    version (Windows) string javaCmd = "java.exe";
+    
+    string javaPath = findCmdPath(javaCmd);
+
+    if (javaPath)
+        return javaPath;
+    else
+    {
+        string javaHome = environment.get("JAVA_HOME");
+        javaPath = buildPath(javaHome, "bin", javaCmd);
+
+        if (javaPath.isExec) 
+            return javaPath;
+        else
+            return null;
+    }
 }
 
 void test2()
