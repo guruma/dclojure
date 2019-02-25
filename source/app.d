@@ -34,13 +34,13 @@ void main(string[] args)
 {
    // test1(args);
    // test2();
-   string s = findJavaCmd();
+   string s = findJava();
    writeln("JavaCmd = ", s);
 }
 
 string findCmdPath(string cmd)
 {
-    string envPath = environment.get("PATH");
+    string envPath = env.get("PATH");
     
     string cmdPath;
     foreach (path; envPath.split(pathSeparator))
@@ -58,25 +58,27 @@ string findCmdPath(string cmd)
       return null; 
 }
 
-string findJavaCmd()
+string findJava()
 {
     version (Posix) string javaCmd = "java";
     version (Windows) string javaCmd = "java.exe";
     
     string javaPath = findCmdPath(javaCmd);
 
-    if (javaPath)
+    if (! javaPath.empty)
         return javaPath;
-    else
-    {
-        string javaHome = environment.get("JAVA_HOME");
-        javaPath = buildPath(javaHome, "bin", javaCmd);
 
-        if (javaPath.isExec) 
-            return javaPath;
-        else
-            return null;
-    }
+    string javaHome = env.get("JAVA_HOME");
+
+    if (javaHome.empty)
+	return null;
+
+    javaPath = buildPath(javaHome, "bin", javaCmd);
+
+    if (javaPath.isExec) 
+	return javaPath;
+
+    return null;
 }
 
 void test2()
@@ -169,11 +171,6 @@ Opts parseArgs(string[] args)
             writeln("Invalid option: ", arg);
     }
     return opts;
-}
-
-string findJava()
-{
-    return "/usr/bin/java";
 }
 
 void resolveTags()
