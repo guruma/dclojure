@@ -11,6 +11,10 @@ import std.stdio;
 
 version (Windows)
 {
+    import core.sys.windows.winbase, core.sys.windows.winnt, std.windows.syserror;
+}
+version (Windows)
+{
     private alias FSChar = WCHAR;       // WCHAR can be aliased to wchar or wchar_t
 }
 else version (Posix)
@@ -69,6 +73,7 @@ private T cenforce(T)(T condition, scope const(char)[] name, scope const(FSChar)
     throw new std.file.FileException(name, .errno, file, line);
 }
 
+/*
 bool isExec(string fname)
 {
     bool isExist = false;
@@ -104,6 +109,7 @@ bool isExec(string fname)
         return (0 != (st.st_mode & S_IXUSR));
     }
 }
+*/
 
 private bool _isExec(R)(R name)
 if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
@@ -111,22 +117,21 @@ if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
 {
     version (Windows)
     {
-	import core.sys.windows.stat;
-        auto namez = name.tempCString!FSChar();
+    	import core.sys.windows.stat;
 
-        static auto trustedStat(const(FSChar)* namez, ref stat_t buf) @trusted
+        static auto trustedStat(const(char)* namez, ref struct_stat st) 
         {
-	    return stat(namez, &st);
+	        return stat(namez, &st);
         }
 
-	struct_stat st = void;
-        immutable result = trustedStat(namez, st);
+	    struct_stat st = void;
+        immutable result = trustedStat(name.toStringz(), st);
 
         static if (isNarrowString!R && is(Unqual!(ElementEncodingType!R) == char))
             alias names = name;
         else
             string names = null;
-        cenforce(result == 0, names, namez);
+        cenforce(result == 0, names);
 
         return (0 != (result & S_IEXEC));
 	//return (result & S_IFMT) == S_IEXEC;
@@ -158,7 +163,7 @@ if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
     }
 }
 
-/*
+
 public bool isExec(R)(R name)
 if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
     !isConvertibleToString!R)
@@ -185,7 +190,7 @@ if (isConvertibleToString!R)
 	return false;
     }
 }
-*/
+
 
 public bool exists(R)(R name)
 if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
