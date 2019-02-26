@@ -52,8 +52,10 @@ void normal (string[] args)
 
     version (Windows)
         string installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
-    version (Posix) 
-        string installDir = buildPath("/usr", "local", "lib", "clojure");
+    version (linux) 
+        string installDir = "/usr/local/lib/clojure";
+    version (OSX) 
+        string installDir = "/usr/local/Cellar/clojure/1.10.0.414";
     
     string toolsCp = buildPath(installDir, "libexec", clojureToolsJar);
   
