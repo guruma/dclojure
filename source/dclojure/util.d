@@ -166,12 +166,12 @@ string findJava()
     string javaHome = env.get("JAVA_HOME");
 
     if (javaHome.empty)
-	    return null;
+        return null;
 
     javaPath = buildPath(javaHome, "bin", javaCmd);
 
     if (javaPath.isExec) 
-	    return javaPath;
+        return javaPath;
 
     return null;
 }

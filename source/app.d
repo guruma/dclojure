@@ -26,13 +26,13 @@ void normal (string[] args)
 
     version (Windows)
     {
-	string install_dir = "/usr/local/lib/clojure";
-	string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+       string install_dir = "/usr/local/lib/clojure";
+       string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
     }
     version (Posix) 
     {
-	string install_dir = "/usr/local/lib/clojure";
-	string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+        string install_dir = "/usr/local/lib/clojure";
+        string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
     }
 
     resolveTags();
@@ -44,18 +44,18 @@ void normal (string[] args)
     string[] config_paths;
 
     if(opts.repro)
-	config_paths = [install_dir ~ "/deps.edn", "deps.edn"];
+        config_paths = [install_dir ~ "/deps.edn", "deps.edn"];
     else
-	config_paths = [install_dir ~ "/deps.edn", config_dir ~ "/deps.edn", "deps.edn"];
+        config_paths = [install_dir ~ "/deps.edn", config_dir ~ "/deps.edn", "deps.edn"];
 
     string config_str = makeConfigStr(config_paths);
 
     string cache_dir;
 
     if(exists("deps.end"))
-	cache_dir = ".cpcache";
+        cache_dir = ".cpcache";
     else
-	cache_dir = user_cache_dir;
+        cache_dir = user_cache_dir;
 
     string ck = makeCk();
 
@@ -65,8 +65,7 @@ void normal (string[] args)
     string main_file = cache_dir ~ ck ~ ".main";
 
     if(opts.verbose) 
-	printVerbose();
-
+        printVerbose();
 }
 
 void test1(string[] args)
