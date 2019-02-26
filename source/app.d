@@ -106,8 +106,16 @@ void normal (string[] args)
 
     debug writeln("libsFile = ", libsFile);
 
-    if(opts.verbose) 
-        printVerbose();
+    if (opts.verbose)
+    {
+        writeln("version      = 1.10.0.414");
+        writeln("install_dir  = ", installDir);
+        writeln("config_dir   = ", configDir);
+        writeln("config_paths = ", join(configPaths, " "));
+        writeln("cache_dir    = ", cacheDir);
+        writeln("cp_file      = ", cpFile);
+        writeln();
+    } 
     */
 }
 
