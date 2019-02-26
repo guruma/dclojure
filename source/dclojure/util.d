@@ -183,8 +183,8 @@ void runJava(string cmd)
 }
 
 
-/// determine relevant dirs
-string determineConfigDir()
+/// config dir
+string configDir()
 {
     string dir = env.get("CLJ_CONFIG");
     if (! dir.empty)
@@ -250,5 +250,21 @@ string constructLocationOfCachedFiles()
     return u.text();
 }
 
+string makeConfigStr(string[] config_paths)
+{
+    return "";
+}
 
+string makeCk()
+{
+    return "";
+}
 
+void printVerbose()
+{
+}
+
+string determineConfigDir()
+{
+    return "";
+}
