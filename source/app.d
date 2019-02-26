@@ -1,10 +1,10 @@
 import std.stdio,
-       std.path,
        dclojure.file,
        dclojure.util;
 
 import std.file: mkdirRecurse;
 import std.process: env = environment, executeShell;
+import std.path: buildPath;
 import std.array: join;
 
 string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
@@ -67,11 +67,14 @@ void normal (string[] args)
     debug writeln("userCacheDir = ", userCacheDir);
 
     string ck = makeCk();
+    ck = "12345678";
 
-    string libsFile = cacheDir ~ ck ~ ".libs";
-    string cpFile = cacheDir ~ ck ~ ".cp";
-    string jvmFile = cacheDir ~ ck ~ ".jvm";
-    string mainFile = cacheDir ~ ck ~ ".main";
+    string libsFile = buildPath(cacheDir, ck ~ ".libs");
+    string cpFile = buildPath(cacheDir, ck ~ ".cp");
+    string jvmFile = buildPath(cacheDir, ck ~ ".jvm");
+    string mainFile = buildPath(cacheDir, ck ~ ".main");
+
+    debug writeln("libsFile = ", libsFile);
 
     if(opts.verbose) 
         printVerbose();
