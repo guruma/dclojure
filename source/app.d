@@ -17,7 +17,7 @@ void normal (string[] args)
 {
     Opts opts = parseArgs(args[1 .. $]);
 
-    string java_cmd = findJava();
+    string javaCmd = findJava();
 
     if(opts.help)
     {
@@ -26,43 +26,43 @@ void normal (string[] args)
 
     version (Windows)
     {
-       string install_dir = "/usr/local/lib/clojure";
-       string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+       string installDir = "/usr/local/lib/clojure";
+       string toolsCp = installDir ~ "/libexec/clojure-tools-1.10.0.414.jar";
     }
     version (Posix) 
     {
-        string install_dir = "/usr/local/lib/clojure";
-        string tools_cp = install_dir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+        string installDir = "/usr/local/lib/clojure";
+        string toolsCp = installDir ~ "/libexec/clojure-tools-1.10.0.414.jar";
     }
 
     resolveTags();
 
-    string config_dir = configDir();
+    string configDir = configDir();
 
-    string user_cache_dir = determineCacheDir(config_dir);
+    string userCacheDir = determineCacheDir(configDir);
 
-    string[] config_paths;
+    string[] configPaths;
 
     if(opts.repro)
-        config_paths = [install_dir ~ "/deps.edn", "deps.edn"];
+        configPaths = [installDir ~ "/deps.edn", "deps.edn"];
     else
-        config_paths = [install_dir ~ "/deps.edn", config_dir ~ "/deps.edn", "deps.edn"];
+        configPaths = [installDir ~ "/deps.edn", configDir ~ "/deps.edn", "deps.edn"];
 
-    string config_str = makeConfigStr(config_paths);
+    string configStr = makeConfigStr(configPaths);
 
-    string cache_dir;
+    string cacheDir;
 
     if(exists("deps.end"))
-        cache_dir = ".cpcache";
+        cacheDir = ".cpcache";
     else
-        cache_dir = user_cache_dir;
+        cacheDir = userCacheDir;
 
     string ck = makeCk();
 
-    string libs_file = cache_dir ~ ck ~ ".libs";
-    string cp_file = cache_dir ~ ck ~ ".cp";
-    string jvm_file = cache_dir ~ ck ~ ".jvm";
-    string main_file = cache_dir ~ ck ~ ".main";
+    string libsFile = cacheDir ~ ck ~ ".libs";
+    string cpFile = cacheDir ~ ck ~ ".cp";
+    string jvmFile = cacheDir ~ ck ~ ".jvm";
+    string mainFile = cacheDir ~ ck ~ ".main";
 
     if(opts.verbose) 
         printVerbose();
