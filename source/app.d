@@ -4,9 +4,6 @@ import std.stdio,
 
 import std.file: mkdirRecurse;
 
-Opts opts;
-string configDir;
-string cacheDir;
 
 void main(string[] args)
 {
@@ -18,12 +15,14 @@ void main(string[] args)
 
 void test1(string[] args)
 {
+    string configDir;
+
     if("dclojure".exists) writeln("exist");
  
     runJava("/usr/bin/java -version");
     writeln("configDir = ", determineConfigDir());
 
-    opts = parseArgs(args[1 .. $]);
+    Opts opts = parseArgs(args[1 .. $]);
     writeln("opts = ", opts);
 
     writeln(helpMessage);
@@ -41,16 +40,16 @@ void test2()
 
 void test3()
 {
-   string s = findJava();
-   writeln("JavaCmd = ", s);
+    string s = findJava();
+    writeln("JavaCmd = ", s);
 
-    configDir = determineConfigDir();
+    string configDir = determineConfigDir();
     writeln("configDir = ", configDir);
 
     if (!isDir(configDir))
         mkdirRecurse(configDir);
 
-    cacheDir = determineCacheDir(configDir);
+    string cacheDir = determineCacheDir(configDir);
     writeln("cacheDir = ", cacheDir);
 }
 
