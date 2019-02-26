@@ -1,11 +1,12 @@
 module dclojure.util;
 
-import  std.stdio, 
-        std.string, 
-        std.path, 
-        std.algorithm,
-        dclojure.file,
-        std.array;
+import std.stdio, 
+       std.string, 
+       std.path, 
+       std.algorithm,
+       core.stdc.stdlib,
+       dclojure.file,
+       std.array;
 
 import std.process : env = environment, executeShell;
 
@@ -216,13 +217,25 @@ string determineCacheDir(string configDir)
         return buildPath(configDir, ".cpcache");
 }
 
-
-///
-void resolveTags()
+void resolveTags(string javaCmd, string toolsCp)
 {
+    if(exists("deps.edn"))
+    {
+        string cmd = join([javaCmd, 
+                           "-Xmx256m -classpath", 
+                           toolsCp, 
+                           "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"],
+                           " ");
+
+        writeln(cmd);
+        runJava(cmd);
+    }
+    else
+    {
+        writeln("deps.edn does not exist");
+        exit(1);
+    }
 }
-
-
 
 string makeToolsArgs()
 {
@@ -232,22 +245,6 @@ string makeToolsArgs()
 string makeClasspath()
 {
     return "";
-}
-
-//string constructLocationOfCachedFiles(string resolvedAliases, string classpathAliases, string allAliases, string vmAliases, string mainAliases, string depsData, string configPath)
-string constructLocationOfCachedFiles()
-{
-    import std.digest.crc;
-    import std.conv;
-    //return "";
-    //return "abc".crc32Of().text();
-    ubyte[4] hash = "abc\n".crc32Of();
-    uint u = hash[3] <<  0 |
-	     hash[2] <<  8 |
-	     hash[1] << 16 |
-	     hash[0] << 24;
-
-    return u.text();
 }
 
 string makeConfigStr(string[] config_paths)

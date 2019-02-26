@@ -13,11 +13,17 @@ string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
 
 void main(string[] args)
 {
-    //normal(args);
+    normal(args);
     //test1(args);
     //test2();
     //test3();
-    testMakeChecksum();
+    //testMakeChecksum();
+    //testResolveTags();
+}
+
+void testResolveTags()
+{
+    resolveTags("/usr/bin/java", "");
 }
 
 void testMakeChecksum()
@@ -33,6 +39,8 @@ void testMakeChecksum()
 
 void normal (string[] args)
 {
+    writeln("normal test");
+
     Opts opts = parseArgs(args[1 .. $]);
 
     string javaCmd = findJava();
@@ -49,10 +57,10 @@ void normal (string[] args)
     
     string toolsCp = buildPath(installDir, "libexec", clojureToolsJar);
   
+    if(opts.resolveTags)
+        resolveTags("/usr/bin/java", toolsCp);
 
-    resolveTags();
-
-
+    /*
     string configDir = configDir();
     string userCacheDir = determineCacheDir(configDir);
 
@@ -98,6 +106,7 @@ void normal (string[] args)
 
     if(opts.verbose) 
         printVerbose();
+    */
 }
 
 void test1(string[] args)
