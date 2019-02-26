@@ -26,13 +26,13 @@ void normal (string[] args)
 
     version (Windows)
     {
-       string installDir = "/usr/local/lib/clojure";
-       string toolsCp = installDir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+        string installDir = buildPath("usr", "local", "lib", "clojure");
+        string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
     }
     version (Posix) 
     {
-        string installDir = "/usr/local/lib/clojure";
-        string toolsCp = installDir ~ "/libexec/clojure-tools-1.10.0.414.jar";
+        string installDir = buildPath("usr", "local", "lib", "clojure");
+        string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
     }
 
     resolveTags();
@@ -44,9 +44,9 @@ void normal (string[] args)
     string[] configPaths;
 
     if(opts.repro)
-        configPaths = [installDir ~ "/deps.edn", "deps.edn"];
+        configPaths = [buildPath(installDir, "deps.edn"), "deps.edn"];
     else
-        configPaths = [installDir ~ "/deps.edn", configDir ~ "/deps.edn", "deps.edn"];
+        configPaths = [buildPath(installDir, "deps.edn"), buildPath(configDir, "deps.edn"), "deps.edn"];
 
     string configStr = makeConfigStr(configPaths);
 
