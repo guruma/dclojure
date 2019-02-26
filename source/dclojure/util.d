@@ -255,9 +255,40 @@ string makeConfigStr(string[] config_paths)
     return "";
 }
 
-string makeCk()
+string makeChecksum(string[] resolveAliases,
+                    string[] classpathAliases,
+                    string[] allAliases,
+                    string[] jvmAliases,
+                    string[] mainAliases,
+                    string depsData,
+                    string[] configPaths)
 {
-    return "";
+    string val = join([resolveAliases.join(),
+                       classpathAliases.join(),
+                       allAliases.join(),
+                       jvmAliases.join(),
+                       mainAliases.join(),
+                       depsData],
+                       "|");
+
+    foreach (string configPath; configPaths)
+    {
+        if (exists(configPath))
+            val ~= "|" ~ configPath;
+        else
+            val ~= "|NIL";
+    }
+
+    import std.digest.crc;
+    import std.conv;
+
+    ubyte[4] hash = val.crc32Of();
+    uint u = hash[3] <<  0 |
+             hash[2] <<  8 |
+             hash[1] << 16 |
+             hash[0] << 24;
+
+    return u.text();
 }
 
 void printVerbose()

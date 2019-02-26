@@ -1,4 +1,6 @@
 import std.stdio,
+       std.string,
+       std.path,
        dclojure.file,
        dclojure.util;
 
@@ -11,10 +13,22 @@ string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
 
 void main(string[] args)
 {
-    normal(args);
+    //normal(args);
     //test1(args);
     //test2();
     //test3();
+    testMakeChecksum();
+}
+
+void testMakeChecksum()
+{
+    string[] a = ["a", "b", "c"];
+    string[] b = ["1", "2", "3"];
+    string[] paths = ["dclojur", "dub.json"];
+
+    string ck = makeChecksum(a,a,a,a,b,"deps.data", paths);
+
+    writeln(ck);
 }
 
 void normal (string[] args)
@@ -66,8 +80,14 @@ void normal (string[] args)
     debug writeln("cacheDir = ", cacheDir);
     debug writeln("userCacheDir = ", userCacheDir);
 
-    string ck = makeCk();
-    ck = "12345678";
+    string ck = makeChecksum(
+                    opts.resolveAliases,
+                    opts.classpathAliases,
+                    opts.allAliases,
+                    opts.jvmAliases,
+                    opts.mainAliases,
+                    opts.depsData,
+                    configPaths);
 
     string libsFile = buildPath(cacheDir, ck ~ ".libs");
     string cpFile = buildPath(cacheDir, ck ~ ".cp");
