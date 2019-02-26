@@ -5,7 +5,9 @@ import std.stdio,
 
 import std.file: mkdirRecurse;
 import std.process: env = environment, executeShell;
+import std.array: join;
 
+string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
 
 void main(string[] args)
 {
@@ -31,30 +33,38 @@ void normal (string[] args)
     version (Posix) 
         string installDir = buildPath("/usr", "local", "lib", "clojure");
     
-    writeln("installDir = ", installDir);
-    string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
+    string toolsCp = buildPath(installDir, "libexec", clojureToolsJar);
+  
 
     resolveTags();
 
-    string configDir = configDir();
 
+    string configDir = configDir();
     string userCacheDir = determineCacheDir(configDir);
 
     string[] configPaths;
-
     if(opts.repro)
         configPaths = [buildPath(installDir, "deps.edn"), "deps.edn"];
     else
         configPaths = [buildPath(installDir, "deps.edn"), buildPath(configDir, "deps.edn"), "deps.edn"];
 
-    string configStr = makeConfigStr(configPaths);
+    string configStr = join(configPaths, ",");
+
+    debug writeln("configDir = ", configDir);
+    debug writeln("userCacheDir = ", userCacheDir);
+    debug writeln("configPaths = ", configPaths);
+    debug writeln("configStr = ", configStr);
+
 
     string cacheDir;
 
-    if(exists("deps.end"))
+    if(exists("deps.edn"))
         cacheDir = ".cpcache";
     else
         cacheDir = userCacheDir;
+
+    debug writeln("cacheDir = ", cacheDir);
+    debug writeln("userCacheDir = ", userCacheDir);
 
     string ck = makeCk();
 
