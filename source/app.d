@@ -1,8 +1,10 @@
 import std.stdio,
+       std.path,
        dclojure.file,
        dclojure.util;
 
 import std.file: mkdirRecurse;
+import std.process: env = environment, executeShell;
 
 
 void main(string[] args)
@@ -25,15 +27,12 @@ void normal (string[] args)
     }
 
     version (Windows)
-    {
-        string installDir = buildPath("usr", "local", "lib", "clojure");
-        string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
-    }
+        string installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
     version (Posix) 
-    {
-        string installDir = buildPath("usr", "local", "lib", "clojure");
-        string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
-    }
+        string installDir = buildPath("/usr", "local", "lib", "clojure");
+    
+    writeln("installDir = ", installDir);
+    string toolsCp = buildPath(installDir, "libexec", "clojure-tools-1.10.0.414.jar");
 
     resolveTags();
 
