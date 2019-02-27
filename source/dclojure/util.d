@@ -165,7 +165,6 @@ Opts parseArgs(string[] args)
 }
 
 
-/// runJava
 string findCmdPath(string cmd)
 {
     string envPath = env.get("PATH");
@@ -212,7 +211,6 @@ string findJava()
 void runJava(string cmd)
 {
     auto ls = executeShell(cmd);
-    writeln(ls);
 }
 
 
