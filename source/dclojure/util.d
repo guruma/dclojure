@@ -237,11 +237,6 @@ void resolveTags(string javaCmd, string toolsCp)
     }
 }
 
-string makeToolsArgs()
-{
-    return "";
-}
-
 string makeClasspath()
 {
     return "";
@@ -340,4 +335,14 @@ void printDescribe(string toolsVersion,
     writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
     writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
     writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
+}
+
+bool newerThan(string fnameA, string fnameB)
+{
+    return false;
+}
+
+string[] makeToolsArgs()
+{
+    return ["a", "b"];
 }

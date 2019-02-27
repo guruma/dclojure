@@ -60,9 +60,8 @@ void normal (string[] args)
     string toolsCp = buildPath(installDir, "libexec", toolsJar);
   
     if(opts.resolveTags)
-        resolveTags("/usr/bin/java", toolsCp);
+        resolveTags(javaCmd, toolsCp);
 
-    
     string configDir = configDir();
     string userCacheDir = determineCacheDir(configDir);
 
@@ -111,7 +110,80 @@ void normal (string[] args)
 
     if (opts.describe)
         printDescribe(toolsVersion, configPaths, installDir, configDir, cacheDir, opts);
+
+    bool stale = false;
+
+    if(opts.force || !cpFile.exists)
+    { 
+        stale = true;
+    }
+    else
+    {
+        foreach(configPath; configPaths)
+        {
+            if(newerThan(configPath, cpFile))
+            {
+                stale = true;
+                break;
+            }
+
+        }
+    }
+
+    string[] toolsArgs;
+
+    if(stale || opts.pom)
+    {
+        toolsArgs = makeToolsArgs();
+    }
+    
+    if(stale && ! opts.describe)
+    {
+        if(opts.verbose)
+            writeln("Refreshing classpath");
+        //runJava
+    }
+
+    string cp;
+
+    if(opts.describe)
+        cp = "";
+    else if(! opts.forceCp.empty())
+        cp = opts.forceCp;
+    else
+        cp = readText(cpFile);
+
+    if(opts.pom)
+    {
+        //runJava
+    }
+    else if(opts.printClasspath)
+    {
+        writeln(cp);
+    }
+    else if(opts.describe)
+    {
+        //printDescribe();
+    }
+    else if(opts.tree)
+    {
+        //runJava
+    }
+    else
+    {
+        string jvmCacheOpts, mainCacheOpts;
+
+        if(jvmFile.exists)
+            jvmCacheOpts = readText(jvmFile);
+
+        if(mainFile.exists)
+            mainCacheOpts = readText(mainFile);
+
+        //runJava
+    }
+    
 }
+
 
 void test1(string[] args)
 {
@@ -152,5 +224,3 @@ void test3()
     string cacheDir = determineCacheDir(configDir);
     writeln("cacheDir = ", cacheDir);
 }
-
-
