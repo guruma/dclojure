@@ -1,12 +1,11 @@
 import std.stdio,
        std.string,
+       std.path,
+       std.array,
        dclojure.file,
        dclojure.util;
 
-import std.file: mkdirRecurse;
 import std.process: env = environment, executeShell;
-import std.path: buildPath;
-import std.array: join;
 
 
 void main(string[] args)
@@ -21,7 +20,8 @@ void main(string[] args)
 
 void testResolveTags()
 {
-    resolveTags("/usr/bin/java", "");
+    Vars vars;
+    resolveTags(vars);
 }
 
 void testMakeChecksum()
@@ -42,12 +42,11 @@ void normal (string[] args)
 {
     writeln("normal test");
 
-    Opts opts = parseArgs(args[1 .. $]);
-
     Vars vars;
     vars.toolsVersion = "1.10.0.414";
     vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
 
+    Opts opts = parseArgs(args[1 .. $]);
 
     vars.javaCmd = findJava();
 
@@ -61,20 +60,21 @@ void normal (string[] args)
     version (linux) 
         vars.installDir = "/usr/local/lib/clojure";
     version (OSX) 
-        vars.installDir = "/usr/local/Cellar/clojure/1.10.0.414";
+        vars.installDir = "/usr/local/Cellar/clojure/" ~ vars.toolsVersion;
     
     vars.toolsCp = buildPath(vars.installDir, "libexec", vars.toolsJar);
   
-    if(opts.resolveTags)
-        resolveTags(vars.javaCmd, vars.toolsCp);
+    if (opts.resolveTags)
+        resolveTags(vars);
 
     vars.configDir = determineConfigDir();
     vars.userCacheDir = determineCacheDir(vars.configDir);
 
-    if(opts.repro)
+    if (opts.repro)
         vars.configPaths = [buildPath(vars.installDir, "deps.edn"), "deps.edn"];
     else
-        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), buildPath(vars.configDir, "deps.edn"), "deps.edn"];
+        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), 
+                            buildPath(vars.configDir, "deps.edn"), "deps.edn"];
 
     vars.configStr = join(vars.configPaths, ",");
 
@@ -94,8 +94,8 @@ void normal (string[] args)
     vars.ck = makeChecksum(vars, opts);
 
     vars.libsFile = buildPath(vars.cacheDir, vars.ck ~ ".libs");
-    vars.cpFile = buildPath(vars.cacheDir, vars.ck ~ ".cp");
-    vars.jvmFile = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
+    vars.cpFile   = buildPath(vars.cacheDir, vars.ck ~ ".cp");
+    vars.jvmFile  = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
     vars.mainFile = buildPath(vars.cacheDir, vars.ck ~ ".main");
 
     debug writeln("libsFile = ", vars.libsFile);
@@ -107,9 +107,7 @@ void normal (string[] args)
         printDescribe(vars, opts);
 
     if(opts.force || !vars.cpFile.exists)
-    { 
         vars.stale = true;
-    }
     else
     {
         foreach(configPath; vars.configPaths)
@@ -119,21 +117,16 @@ void normal (string[] args)
                 vars.stale = true;
                 break;
             }
-
         }
     }
 
-    if(vars.stale || opts.pom)
-    {
+    if (vars.stale || opts.pom)
         vars.toolsArgs = makeToolsArgs(vars, opts);
-    }
     
-    if(vars.stale && ! opts.describe)
-    {
+    if (vars.stale && ! opts.describe)
         if(opts.verbose)
             writeln("Refreshing classpath");
-        //runJava
-    }
+        runJava("a");
 
     if(opts.describe)
         vars.cp = "";
@@ -143,21 +136,13 @@ void normal (string[] args)
         vars.cp = readText(vars.cpFile);
 
     if(opts.pom)
-    {
-        //runJava
-    }
+        runJava("a");
     else if(opts.printClasspath)
-    {
         writeln(vars.cp);
-    }
     else if(opts.describe)
-    {
         printDescribe(vars, opts);
-    }
     else if(opts.tree)
-    {
-        //runJava
-    }
+        runJava("a");
     else
     {
         if(vars.jvmFile.exists)
@@ -166,7 +151,7 @@ void normal (string[] args)
         if(vars.mainFile.exists)
             vars.mainCacheOpts = readText(vars.mainFile);
 
-        //runJava
+        runJava("a");
     }
     
 }
@@ -199,6 +184,7 @@ void test2()
 
 void test3()
 {
+    import std.file: mkdirRecurse;
     string s = findJava();
     writeln("JavaCmd = ", s);
 

@@ -249,17 +249,16 @@ string determineCacheDir(string configDir)
         return buildPath(configDir, ".cpcache");
 }
 
-void resolveTags(string javaCmd, string toolsCp)
+void resolveTags(in ref Vars vars)
 {
     if(exists("deps.edn"))
     {
-        string cmd = join([javaCmd, 
+        string cmd = join([vars.javaCmd, 
                            "-Xmx256m -classpath", 
-                           toolsCp, 
+                           vars.toolsCp, 
                            "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"],
                            " ");
 
-        writeln(cmd);
         runJava(cmd);
     }
     else
