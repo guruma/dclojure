@@ -215,17 +215,17 @@ void runJava(string cmd)
 string determineUserConfigDir()
 {
     string dir = env.get("CLJ_CONFIG");
-    if (! dir.empty)
+    if (!dir.empty)
         return dir;
 
     dir = env.get("XDG_CONFIG_HOME");
-    if (! dir.empty)
+    if (!dir.empty)
         return buildPath(dir, "clojure");
     
     version (Posix) dir = env.get("HOME");
     version (Windows) dir = env.get("HOMEDRIVE") ~ env.get("HOMEPATH");
 
-    if (! dir.empty)
+    if (!dir.empty)
         return buildPath(dir, ".clojure");
     else
         return dir;
@@ -256,11 +256,6 @@ void resolveTags(in ref Vars vars)
 }
 
 string makeClasspath()
-{
-    return "";
-}
-
-string makeConfigStr(string[] config_paths)
 {
     return "";
 }
@@ -373,10 +368,10 @@ void createUserConfigDir(in ref Vars vars)
 {
     import std.file: mkdirRecurse, copy;
 
-    if (! vars.configDir.isDir)
+    if (!vars.configDir.isDir)
         mkdirRecurse(vars.configDir);
 
-    if (! buildPath(vars.configDir, "deps.edn").exists)
+    if (!buildPath(vars.configDir, "deps.edn").exists)
        copy(buildPath(vars.installDir, "example-deps.edn"), 
             buildPath(vars.configDir, "deps.edn"));
 }

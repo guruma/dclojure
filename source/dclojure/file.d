@@ -45,7 +45,7 @@ public bool isExec(string name)
     {
         return _isExec(name);
     } 
-    catch(Exception e)
+    catch (Exception e)
     {
         return false;
     }
@@ -57,7 +57,7 @@ public bool exists(string name)
     {
         return std.file.exists(name);
     } 
-    catch(Exception e)
+    catch (Exception e)
     {
         return false;
     }
@@ -69,7 +69,7 @@ public bool isDir(string name)
     {
         return std.file.isDir(name);
     } 
-    catch(Exception e)
+    catch (Exception e)
     {
         return false;
     }
@@ -81,7 +81,7 @@ public bool isFile(string name)
     {
         return std.file.isFile(name);
     } 
-    catch(Exception e)
+    catch (Exception e)
     {
         return false;
     }
@@ -93,7 +93,7 @@ string readText(string fname)
     {
         return std.file.readText(fname);
     }
-    catch(Exception e)
+    catch (Exception e)
     {
         return "";
     }
@@ -108,7 +108,7 @@ bool newerThan(string file1, string file2)
     {
         return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
     }
-    catch(Exception e)
+    catch (Exception e)
     {
         return false;
     }

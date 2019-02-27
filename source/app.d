@@ -19,7 +19,7 @@ void main(string[] args)
 
     vars.javaCmd = findJava();
 
-    if(opts.help)
+    if (opts.help)
         writeln(helpMessage);
 
     version (Windows)
@@ -33,9 +33,9 @@ void main(string[] args)
   
     if (opts.resolveTags)
     {
-        if(exists("deps.edn"))
+        if (exists("deps.edn"))
         {
-           resolveTags(vars);
+            resolveTags(vars);
         }
         else
         {
@@ -65,7 +65,7 @@ void main(string[] args)
     debug writeln("configStr = ", vars.configStr);
 
     // Determine whether to use user or project cache
-    if(exists("deps.edn"))
+    if (exists("deps.edn"))
         vars.cacheDir = ".cpcache";
     else
         vars.cacheDir = vars.userCacheDir;
@@ -85,10 +85,7 @@ void main(string[] args)
     if (opts.verbose)
         printVerbose(vars);
 
-    //if (opts.describe)
-    //    printDescribe(vars, opts);
-
-    if(opts.force || !vars.cpFile.exists)
+    if (opts.force || !vars.cpFile.exists)
         vars.stale = true;
     else
     {
@@ -106,21 +103,21 @@ void main(string[] args)
         vars.toolsArgs = makeToolsArgs(vars, opts);
      
     // If stale, run make-classpath to refresh cached classpath
-    if (vars.stale && ! opts.describe)
+    if (vars.stale && !opts.describe)
     {
         if(opts.verbose)
             writeln("Refreshing classpath");
         makeClasspath(vars, opts);
     }
 
-    if(opts.describe)
+    if (opts.describe)
         vars.cp = "";
     else if(! opts.forceCp.empty())
         vars.cp = opts.forceCp;
     else
         vars.cp = readText(vars.cpFile);
 
-    if(opts.pom)
+    if (opts.pom)
         generateManifest(vars, opts);
     else if(opts.printClasspath)
         writeln(vars.cp);
@@ -130,15 +127,14 @@ void main(string[] args)
         printTree(vars, opts);
     else
     {
-        if(vars.jvmFile.exists)
+        if (vars.jvmFile.exists)
             vars.jvmCacheOpts = readText(vars.jvmFile);
 
-        if(vars.mainFile.exists)
+        if (vars.mainFile.exists)
             vars.mainCacheOpts = readText(vars.mainFile);
 
         runClojure(vars, opts);
     }
-    
 }
 
 
@@ -146,7 +142,7 @@ void test1(string[] args)
 {
     string configDir;
 
-    if("dclojure".exists) writeln("exist");
+    if ("dclojure".exists) writeln("exist");
  
     runJava("/usr/bin/java -version");
     writeln("configDir = ", determineUserConfigDir());
