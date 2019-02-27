@@ -124,9 +124,11 @@ void normal (string[] args)
         vars.toolsArgs = makeToolsArgs(vars, opts);
     
     if (vars.stale && ! opts.describe)
+    {
         if(opts.verbose)
             writeln("Refreshing classpath");
-        runJava("a");
+        makeClasspath(vars, opts);
+    }
 
     if(opts.describe)
         vars.cp = "";

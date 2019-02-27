@@ -364,6 +364,10 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
     return toolsArgs;
 }
 
+void makeClasspath(in ref Vars vars, in ref Opts opts)
+{
+}
+
 void generateManifest(in ref Vars vars, in ref Opts opts)
 {
 }
