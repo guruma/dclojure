@@ -1,6 +1,5 @@
 import std.stdio,
        std.string,
-       std.path,
        dclojure.file,
        dclojure.util;
 
@@ -9,7 +8,8 @@ import std.process: env = environment, executeShell;
 import std.path: buildPath;
 import std.array: join;
 
-string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
+enum toolsVersion = "1.10.0.414";
+string toolsJar = "clojure-tools-" ~ toolsVersion ~ ".jar";
 
 void main(string[] args)
 {
@@ -57,12 +57,12 @@ void normal (string[] args)
     version (OSX) 
         string installDir = "/usr/local/Cellar/clojure/1.10.0.414";
     
-    string toolsCp = buildPath(installDir, "libexec", clojureToolsJar);
+    string toolsCp = buildPath(installDir, "libexec", toolsJar);
   
     if(opts.resolveTags)
         resolveTags("/usr/bin/java", toolsCp);
 
-    /*
+    
     string configDir = configDir();
     string userCacheDir = determineCacheDir(configDir);
 
@@ -106,9 +106,11 @@ void normal (string[] args)
 
     debug writeln("libsFile = ", libsFile);
 
-    if(opts.verbose) 
-        printVerbose();
-    */
+    if (opts.verbose)
+        printVerbose(toolsVersion, installDir, configDir, configPaths, cacheDir, cpFile);
+
+    if (opts.describe)
+        printDescribe(toolsVersion, configPaths, installDir, configDir, cacheDir, opts);
 }
 
 void test1(string[] args)

@@ -64,7 +64,7 @@ struct Opts
     string[] resolveAliases = [];
     string[] classpathAliases = [];
     string[] jvmAliases = [];
-    string[] mainAliases = ["1", "2", "3"];
+    string[] mainAliases = [];
     string[] allAliases = [];
     string depsData = "";
     string forceCp = "";
@@ -295,4 +295,49 @@ void printVerbose()
 string determineConfigDir()
 {
     return "";
+}
+
+void printVerbose(string toolsVersion,
+                  string installDir,
+                  string configDir,
+                  string[] configPaths,
+                  string cacheDir,
+                  string cpFile)
+{
+    writeln("version      = ", toolsVersion);
+    writeln("install_dir  = ", installDir);
+    writeln("config_dir   = ", configDir);
+    writeln("config_paths = ", join(configPaths, " "));
+    writeln("cache_dir    = ", cacheDir);
+    writeln("cp_file      = ", cpFile);
+    writeln();
+}
+
+void printDescribe(string toolsVersion,
+                   string[] configPaths,
+                   string installDir,
+                   string configDir,
+                   string cacheDir,
+                   Opts opts)
+{
+    string[] pathVector;
+
+    foreach(path; configPaths)
+    {
+        if (isFile(path))
+            pathVector ~= path;
+    }
+
+    writefln(`{:version "%s"`, toolsVersion);
+    writefln(` :config-files [%(%s %)]`, pathVector);
+    writefln(` :install-dir "%s"`, installDir);
+    writefln(` :config-dir "%s"`, configDir);
+    writefln(` :cache-dir "%s"`, cacheDir);
+    writeln( ` :force `, opts.force);
+    writeln( ` :repro `, opts.repro);
+    writefln(` :resolve-aliases "%s"`, join(opts.resolveAliases, " "));
+    writefln(` :classpath-aliases "%s"`, join(opts.classpathAliases, " "));
+    writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
+    writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
+    writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
 }
