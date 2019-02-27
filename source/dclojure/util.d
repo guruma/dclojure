@@ -365,3 +365,15 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 
     return toolsArgs;
 }
+
+void generateManifest(in ref Vars vars, in ref Opts opts)
+{
+}
+
+void printTree(in ref Vars vars, in ref Opts opts)
+{
+}
+
+void runClojure(in ref Vars vars, in ref Opts opts)
+{
+}

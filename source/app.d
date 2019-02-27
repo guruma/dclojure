@@ -136,13 +136,13 @@ void normal (string[] args)
         vars.cp = readText(vars.cpFile);
 
     if(opts.pom)
-        runJava("a");
+        generateManifest(vars, opts);
     else if(opts.printClasspath)
         writeln(vars.cp);
     else if(opts.describe)
         printDescribe(vars, opts);
     else if(opts.tree)
-        runJava("a");
+        printTree(vars, opts);
     else
     {
         if(vars.jvmFile.exists)
@@ -151,7 +151,7 @@ void normal (string[] args)
         if(vars.mainFile.exists)
             vars.mainCacheOpts = readText(vars.mainFile);
 
-        runJava("a");
+        runClojure(vars, opts);
     }
     
 }
