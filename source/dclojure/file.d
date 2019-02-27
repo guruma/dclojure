@@ -94,6 +94,18 @@ public bool isFile(string name)
     }
 }
 
+string readText(string fname)
+{
+    try
+    {
+	return std.file.readText(fname);
+    }
+    catch(Exception e)
+    {
+        return "";
+    }
+}
+
 unittest 
 {
     assert(0 == 0);

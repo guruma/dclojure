@@ -236,11 +236,6 @@ void resolveTags(string javaCmd, string toolsCp)
     }
 }
 
-string makeToolsArgs()
-{
-    return "";
-}
-
 string makeClasspath()
 {
     return "";
@@ -341,6 +336,7 @@ void printDescribe(string toolsVersion,
     writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
 }
 
+<<<<<<< HEAD
 bool newerThan(string file1, string file2)
 {
     import std.file: timeLastModified;
@@ -348,3 +344,14 @@ bool newerThan(string file1, string file2)
 
     return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
 }
+=======
+bool newerThan(string fnameA, string fnameB)
+{
+    return false;
+}
+
+string[] makeToolsArgs()
+{
+    return ["a", "b"];
+}
+>>>>>>> e6294f9f6aee07c6615d62aca25f8d89a1c17f08
