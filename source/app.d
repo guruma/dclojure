@@ -1,6 +1,5 @@
 import std.stdio,
        std.string,
-       std.path,
        dclojure.file,
        dclojure.util;
 
@@ -9,7 +8,8 @@ import std.process: env = environment, executeShell;
 import std.path: buildPath;
 import std.array: join;
 
-string clojureToolsJar = "clojure-tools-1.10.0.414.jar";
+enum toolsVersion = "1.10.0.414";
+string toolsJar = "clojure-tools-" ~ toolsVersion ~ ".jar";
 
 void main(string[] args)
 {
@@ -57,12 +57,12 @@ void normal (string[] args)
     version (OSX) 
         string installDir = "/usr/local/Cellar/clojure/1.10.0.414";
     
-    string toolsCp = buildPath(installDir, "libexec", clojureToolsJar);
+    string toolsCp = buildPath(installDir, "libexec", toolsJar);
   
     if(opts.resolveTags)
         resolveTags("/usr/bin/java", toolsCp);
 
-    /*
+    
     string configDir = configDir();
     string userCacheDir = determineCacheDir(configDir);
 
@@ -106,17 +106,41 @@ void normal (string[] args)
 
     debug writeln("libsFile = ", libsFile);
 
+
     if (opts.verbose)
     {
-        writeln("version      = 1.10.0.414");
+        writeln("version      = ", toolsVersion);
         writeln("install_dir  = ", installDir);
         writeln("config_dir   = ", configDir);
         writeln("config_paths = ", join(configPaths, " "));
         writeln("cache_dir    = ", cacheDir);
         writeln("cp_file      = ", cpFile);
         writeln();
-    } 
-    */
+    }
+
+    if (opts.describe)
+    {
+        string[] pathVector;
+
+        foreach(path; configPaths)
+        {
+            if (isFile(path))
+                pathVector ~= path;
+        }
+
+        writefln(`{:version "%s"`, toolsVersion);
+        writefln(` :config-files [%(%s %)]`, pathVector);
+        writefln(` :install-dir "%s"`, installDir);
+        writefln(` :config-dir "%s"`, configDir);
+        writefln(` :cache-dir "%s"`, cacheDir);
+        writeln( ` :force `, opts.force);
+        writeln( ` :repro `, opts.repro);
+        writefln(` :resolve-aliases "%s"`, join(opts.resolveAliases, " "));
+        writefln(` :classpath-aliases "%s"`, join(opts.classpathAliases, " "));
+        writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
+        writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
+        writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
+    }
 }
 
 void test1(string[] args)

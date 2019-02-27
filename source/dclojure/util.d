@@ -64,7 +64,7 @@ struct Opts
     string[] resolveAliases = [];
     string[] classpathAliases = [];
     string[] jvmAliases = [];
-    string[] mainAliases = ["1", "2", "3"];
+    string[] mainAliases = [];
     string[] allAliases = [];
     string depsData = "";
     string forceCp = "";
