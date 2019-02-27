@@ -1,14 +1,7 @@
 module dclojure.file;
 
 import std.string,
-       std.traits,
-       std.stdio,
-       core.stdc.errno,
-       core.stdc.string,
-       std.internal.cstring,
-       std.range.primitives;
-
-static import std.file;
+       std.file;
 
 
 private bool _isExec(string name)
@@ -98,7 +91,7 @@ string readText(string fname)
 {
     try
     {
-	return std.file.readText(fname);
+        return std.file.readText(fname);
     }
     catch(Exception e)
     {
