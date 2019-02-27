@@ -2,45 +2,15 @@ import std.stdio,
        std.string,
        std.path,
        std.array,
+       core.stdc.stdlib,
        dclojure.file,
        dclojure.util;
 
 import std.process: env = environment, executeShell;
 
+
 void main(string[] args)
 {
-    normal(args);
-    //test1(args);
-    //test2();
-    //test3();
-    //testMakeChecksum();
-    //testResolveTags();
-}
-
-void testResolveTags()
-{
-    Vars vars;
-    resolveTags(vars);
-}
-
-void testMakeChecksum()
-{
-    string[] a = ["a", "b", "c"];
-    string[] b = ["1", "2", "3"];
-    string[] paths = ["dclojur", "dub.json"];
-
-    Opts opts;
-    Vars vars;
-
-    string ck = makeChecksum(vars, opts);
-
-    writeln(ck);
-}
-
-void normal (string[] args)
-{
-    writeln("normal test");
-
     Vars vars;
     vars.toolsVersion = "1.10.0.414";
     vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
@@ -50,9 +20,7 @@ void normal (string[] args)
     vars.javaCmd = findJava();
 
     if(opts.help)
-    {
         writeln(helpMessage);
-    }
 
     version (Windows)
         vars.installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
@@ -64,19 +32,30 @@ void normal (string[] args)
     vars.toolsCp = buildPath(vars.installDir, "libexec", vars.toolsJar);
   
     if (opts.resolveTags)
-        resolveTags(vars);
+    {
+        if(exists("deps.edn"))
+        {
+           resolveTags(vars);
+        }
+        else
+        {
+            writeln("deps.edn does not exist");
+            exit(1);
+        }
+    }
 
-    vars.configDir = determineConfigDir();
+    vars.configDir = determineUserConfigDir();
 
     createUserConfigDir(vars);
 
-    vars.userCacheDir = determineCacheDir(vars.configDir);
+    vars.userCacheDir = determineUserCacheDir(vars.configDir);
 
     if (opts.repro)
         vars.configPaths = [buildPath(vars.installDir, "deps.edn"), "deps.edn"];
     else
         vars.configPaths = [buildPath(vars.installDir, "deps.edn"), 
-                            buildPath(vars.configDir, "deps.edn"), "deps.edn"];
+                            buildPath(vars.configDir, "deps.edn"), 
+                            "deps.edn"];
 
     vars.configStr = join(vars.configPaths, ",");
 
@@ -85,6 +64,7 @@ void normal (string[] args)
     debug writeln("configPaths = ", vars.configPaths);
     debug writeln("configStr = ", vars.configStr);
 
+    // Determine whether to use user or project cache
     if(exists("deps.edn"))
         vars.cacheDir = ".cpcache";
     else
@@ -93,8 +73,8 @@ void normal (string[] args)
     debug writeln("cacheDir = ", vars.cacheDir);
     debug writeln("userCacheDir = ", vars.userCacheDir);
 
+    // Construct location of cached classpath file
     vars.ck = makeChecksum(vars, opts);
-
     vars.libsFile = buildPath(vars.cacheDir, vars.ck ~ ".libs");
     vars.cpFile   = buildPath(vars.cacheDir, vars.ck ~ ".cp");
     vars.jvmFile  = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
@@ -105,8 +85,8 @@ void normal (string[] args)
     if (opts.verbose)
         printVerbose(vars);
 
-    if (opts.describe)
-        printDescribe(vars, opts);
+    //if (opts.describe)
+    //    printDescribe(vars, opts);
 
     if(opts.force || !vars.cpFile.exists)
         vars.stale = true;
@@ -124,7 +104,8 @@ void normal (string[] args)
 
     if (vars.stale || opts.pom)
         vars.toolsArgs = makeToolsArgs(vars, opts);
-    
+     
+    // If stale, run make-classpath to refresh cached classpath
     if (vars.stale && ! opts.describe)
     {
         if(opts.verbose)
@@ -168,7 +149,7 @@ void test1(string[] args)
     if("dclojure".exists) writeln("exist");
  
     runJava("/usr/bin/java -version");
-    writeln("configDir = ", determineConfigDir());
+    writeln("configDir = ", determineUserConfigDir());
 
     Opts opts = parseArgs(args[1 .. $]);
     writeln("opts = ", opts);
@@ -184,5 +165,25 @@ void test2()
     writefln("isDir    : %d", f.isDir);
     writefln("isFile   : %d", f.isFile);
     writefln("isExec   : %d", f.isExec);
+}
+
+void testResolveTags()
+{
+    Vars vars;
+    resolveTags(vars);
+}
+
+void testMakeChecksum()
+{
+    string[] a = ["a", "b", "c"];
+    string[] b = ["1", "2", "3"];
+    string[] paths = ["dclojur", "dub.json"];
+
+    Opts opts;
+    Vars vars;
+
+    string ck = makeChecksum(vars, opts);
+
+    writeln(ck);
 }
 

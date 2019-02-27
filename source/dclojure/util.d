@@ -4,7 +4,6 @@ import std.stdio,
        std.string, 
        std.path, 
        std.algorithm,
-       core.stdc.stdlib,
        dclojure.file,
        std.array;
 
@@ -213,9 +212,7 @@ void runJava(string cmd)
     auto ls = executeShell(cmd);
 }
 
-
-/// config dir
-string determineConfigDir()
+string determineUserConfigDir()
 {
     string dir = env.get("CLJ_CONFIG");
     if (! dir.empty)
@@ -234,7 +231,7 @@ string determineConfigDir()
         return dir;
 }
 
-string determineCacheDir(string configDir)
+string determineUserCacheDir(string configDir)
 {
     string dir = env.get("CLJ_CAHCE");
     if (!dir.empty)
@@ -249,21 +246,13 @@ string determineCacheDir(string configDir)
 
 void resolveTags(in ref Vars vars)
 {
-    if(exists("deps.edn"))
-    {
-        string cmd = join([vars.javaCmd, 
-                           "-Xmx256m -classpath", 
-                           vars.toolsCp, 
-                           "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"],
-                           " ");
+    string cmd = join([vars.javaCmd, 
+                       "-Xmx256m -classpath", 
+                       vars.toolsCp, 
+                       "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"],
+                       " ");
 
-        runJava(cmd);
-    }
-    else
-    {
-        writeln("deps.edn does not exist");
-        exit(1);
-    }
+    runJava(cmd);
 }
 
 string makeClasspath()
