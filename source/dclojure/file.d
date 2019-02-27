@@ -2,16 +2,16 @@ module dclojure.file;
 
 import std.string,
        std.traits,
+       std.stdio,
        core.stdc.errno,
+       core.stdc.string,
        std.internal.cstring,
        std.range.primitives;
 
 static import std.file;
 
 
-private bool _isExec(R)(R name)
-if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
-    !isConvertibleToString!R)
+private bool _isExec(string name)
 {
     version (Windows)
     {
@@ -32,12 +32,13 @@ if (isInputRange!R && !isInfinite!R && isSomeChar!(ElementEncodingType!R) &&
     {
         import core.sys.posix.sys.stat;
 
-        static auto trustedStat(const(char)* namez, ref stat_t buf) @trusted
+        int trustedStat(const(char)* namez, ref stat_t st) @trusted
         {
-            return stat(namez, &buf);
+            return stat(namez, &st);
         }
 
         stat_t st = void;
+
         immutable result = trustedStat(name.toStringz(), st);
 
         return (0 != (st.st_mode & S_IXUSR));
