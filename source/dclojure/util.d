@@ -10,7 +10,6 @@ import std.stdio,
 
 import std.process : env = environment, executeShell;
 
-
 /// helpMessage
 string helpMessage = q"END
 Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
@@ -340,4 +339,12 @@ void printDescribe(string toolsVersion,
     writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
     writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
     writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
+}
+
+bool newerThan(string file1, string file2)
+{
+    import std.file: timeLastModified;
+    import std.datetime : abs, seconds;
+
+    return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
 }

@@ -152,5 +152,3 @@ void test3()
     string cacheDir = determineCacheDir(configDir);
     writeln("cacheDir = ", cacheDir);
 }
-
-
