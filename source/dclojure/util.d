@@ -217,7 +217,7 @@ void runJava(string cmd)
 
 
 /// config dir
-string configDir()
+string determineConfigDir()
 {
     string dir = env.get("CLJ_CONFIG");
     if (! dir.empty)
@@ -307,11 +307,6 @@ string makeChecksum(in ref Vars vars, in ref Opts opts)
              hash[0] << 24;
 
     return u.text();
-}
-
-string determineConfigDir()
-{
-    return "";
 }
 
 void printVerbose(in ref Vars vars) 

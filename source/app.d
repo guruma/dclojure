@@ -68,7 +68,7 @@ void normal (string[] args)
     if(opts.resolveTags)
         resolveTags(vars.javaCmd, vars.toolsCp);
 
-    vars.configDir = configDir();
+    vars.configDir = determineConfigDir();
     vars.userCacheDir = determineCacheDir(vars.configDir);
 
     if(opts.repro)
