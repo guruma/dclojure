@@ -379,3 +379,16 @@ void printTree(in ref Vars vars, in ref Opts opts)
 void runClojure(in ref Vars vars, in ref Opts opts)
 {
 }
+
+void createUserConfigDir(in ref Vars vars)
+{
+    import std.file: mkdirRecurse, copy;
+
+    if (! vars.configDir.isDir)
+        mkdirRecurse(vars.configDir);
+
+    if (! buildPath(vars.configDir, "deps.edn").exists)
+       copy(buildPath(vars.installDir, "example-deps.edn"), 
+            buildPath(vars.configDir, "deps.edn"));
+}
+

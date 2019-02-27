@@ -7,7 +7,6 @@ import std.stdio,
 
 import std.process: env = environment, executeShell;
 
-
 void main(string[] args)
 {
     normal(args);
@@ -68,6 +67,9 @@ void normal (string[] args)
         resolveTags(vars);
 
     vars.configDir = determineConfigDir();
+
+    createUserConfigDir(vars);
+
     vars.userCacheDir = determineCacheDir(vars.configDir);
 
     if (opts.repro)
@@ -184,18 +186,3 @@ void test2()
     writefln("isExec   : %d", f.isExec);
 }
 
-void test3()
-{
-    import std.file: mkdirRecurse;
-    string s = findJava();
-    writeln("JavaCmd = ", s);
-
-    string configDir = determineConfigDir();
-    writeln("configDir = ", configDir);
-
-    if (!isDir(configDir))
-        mkdirRecurse(configDir);
-
-    string cacheDir = determineCacheDir(configDir);
-    writeln("cacheDir = ", cacheDir);
-}
