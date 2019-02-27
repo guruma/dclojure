@@ -8,8 +8,6 @@ import std.process: env = environment, executeShell;
 import std.path: buildPath;
 import std.array: join;
 
-enum toolsVersion = "1.10.0.414";
-string toolsJar = "clojure-tools-" ~ toolsVersion ~ ".jar";
 
 void main(string[] args)
 {
@@ -32,7 +30,10 @@ void testMakeChecksum()
     string[] b = ["1", "2", "3"];
     string[] paths = ["dclojur", "dub.json"];
 
-    string ck = makeChecksum(a,a,a,a,b,"deps.data", paths);
+    Opts opts;
+    Vars vars;
+
+    string ck = makeChecksum(vars, opts);
 
     writeln(ck);
 }
@@ -43,7 +44,12 @@ void normal (string[] args)
 
     Opts opts = parseArgs(args[1 .. $]);
 
-    string javaCmd = findJava();
+    Vars vars;
+    vars.toolsVersion = "1.10.0.414";
+    vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
+
+
+    vars.javaCmd = findJava();
 
     if(opts.help)
     {
@@ -51,107 +57,90 @@ void normal (string[] args)
     }
 
     version (Windows)
-        string installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
+        vars.installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
     version (linux) 
-        string installDir = "/usr/local/lib/clojure";
+        vars.installDir = "/usr/local/lib/clojure";
     version (OSX) 
-        string installDir = "/usr/local/Cellar/clojure/1.10.0.414";
+        vars.installDir = "/usr/local/Cellar/clojure/1.10.0.414";
     
-    string toolsCp = buildPath(installDir, "libexec", toolsJar);
+    vars.toolsCp = buildPath(vars.installDir, "libexec", vars.toolsJar);
   
     if(opts.resolveTags)
-        resolveTags(javaCmd, toolsCp);
+        resolveTags(vars.javaCmd, vars.toolsCp);
 
-    string configDir = configDir();
-    string userCacheDir = determineCacheDir(configDir);
+    vars.configDir = configDir();
+    vars.userCacheDir = determineCacheDir(vars.configDir);
 
-    string[] configPaths;
     if(opts.repro)
-        configPaths = [buildPath(installDir, "deps.edn"), "deps.edn"];
+        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), "deps.edn"];
     else
-        configPaths = [buildPath(installDir, "deps.edn"), buildPath(configDir, "deps.edn"), "deps.edn"];
+        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), buildPath(vars.configDir, "deps.edn"), "deps.edn"];
 
-    string configStr = join(configPaths, ",");
+    vars.configStr = join(vars.configPaths, ",");
 
-    debug writeln("configDir = ", configDir);
-    debug writeln("userCacheDir = ", userCacheDir);
-    debug writeln("configPaths = ", configPaths);
-    debug writeln("configStr = ", configStr);
-
-
-    string cacheDir;
+    debug writeln("configDir = ", vars.configDir);
+    debug writeln("userCacheDir = ", vars.userCacheDir);
+    debug writeln("configPaths = ", vars.configPaths);
+    debug writeln("configStr = ", vars.configStr);
 
     if(exists("deps.edn"))
-        cacheDir = ".cpcache";
+        vars.cacheDir = ".cpcache";
     else
-        cacheDir = userCacheDir;
+        vars.cacheDir = vars.userCacheDir;
 
-    debug writeln("cacheDir = ", cacheDir);
-    debug writeln("userCacheDir = ", userCacheDir);
+    debug writeln("cacheDir = ", vars.cacheDir);
+    debug writeln("userCacheDir = ", vars.userCacheDir);
 
-    string ck = makeChecksum(
-                    opts.resolveAliases,
-                    opts.classpathAliases,
-                    opts.allAliases,
-                    opts.jvmAliases,
-                    opts.mainAliases,
-                    opts.depsData,
-                    configPaths);
+    vars.ck = makeChecksum(vars, opts);
 
-    string libsFile = buildPath(cacheDir, ck ~ ".libs");
-    string cpFile = buildPath(cacheDir, ck ~ ".cp");
-    string jvmFile = buildPath(cacheDir, ck ~ ".jvm");
-    string mainFile = buildPath(cacheDir, ck ~ ".main");
+    vars.libsFile = buildPath(vars.cacheDir, vars.ck ~ ".libs");
+    vars.cpFile = buildPath(vars.cacheDir, vars.ck ~ ".cp");
+    vars.jvmFile = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
+    vars.mainFile = buildPath(vars.cacheDir, vars.ck ~ ".main");
 
-    debug writeln("libsFile = ", libsFile);
+    debug writeln("libsFile = ", vars.libsFile);
 
     if (opts.verbose)
-        printVerbose(toolsVersion, installDir, configDir, configPaths, cacheDir, cpFile);
+        printVerbose(vars);
 
     if (opts.describe)
-        printDescribe(toolsVersion, configPaths, installDir, configDir, cacheDir, opts);
+        printDescribe(vars, opts);
 
-    bool stale = false;
-
-    if(opts.force || !cpFile.exists)
+    if(opts.force || !vars.cpFile.exists)
     { 
-        stale = true;
+        vars.stale = true;
     }
     else
     {
-        foreach(configPath; configPaths)
+        foreach(configPath; vars.configPaths)
         {
-            if(newerThan(configPath, cpFile))
+            if(newerThan(configPath, vars.cpFile))
             {
-                stale = true;
+                vars.stale = true;
                 break;
             }
 
         }
     }
 
-    string[] toolsArgs;
-
-    if(stale || opts.pom)
+    if(vars.stale || opts.pom)
     {
-        toolsArgs = makeToolsArgs();
+        vars.toolsArgs = makeToolsArgs();
     }
     
-    if(stale && ! opts.describe)
+    if(vars.stale && ! opts.describe)
     {
         if(opts.verbose)
             writeln("Refreshing classpath");
         //runJava
     }
 
-    string cp;
-
     if(opts.describe)
-        cp = "";
+        vars.cp = "";
     else if(! opts.forceCp.empty())
-        cp = opts.forceCp;
+        vars.cp = opts.forceCp;
     else
-        cp = readText(cpFile);
+        vars.cp = readText(vars.cpFile);
 
     if(opts.pom)
     {
@@ -159,11 +148,11 @@ void normal (string[] args)
     }
     else if(opts.printClasspath)
     {
-        writeln(cp);
+        writeln(vars.cp);
     }
     else if(opts.describe)
     {
-        //printDescribe();
+        printDescribe(vars, opts);
     }
     else if(opts.tree)
     {
@@ -171,13 +160,11 @@ void normal (string[] args)
     }
     else
     {
-        string jvmCacheOpts, mainCacheOpts;
+        if(vars.jvmFile.exists)
+            vars.jvmCacheOpts = readText(vars.jvmFile);
 
-        if(jvmFile.exists)
-            jvmCacheOpts = readText(jvmFile);
-
-        if(mainFile.exists)
-            mainCacheOpts = readText(mainFile);
+        if(vars.mainFile.exists)
+            vars.mainCacheOpts = readText(vars.mainFile);
 
         //runJava
     }

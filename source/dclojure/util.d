@@ -78,6 +78,39 @@ struct Opts
     bool help = false;
 }
 
+struct Vars
+{
+    string toolsVersion;
+    string toolsJar;
+    string[] resolveAliases;
+    string[] classpathAliases;
+    string[] allAliases;
+    string[] jvmAliases;
+    string[] mainAliases;
+    string[] configPaths;
+    string[] toolsArgs;
+    string installDir;
+    string toolsCp;
+    string depsData;
+    string configDir;
+    string userCacheDir;
+    string configStr;
+    string cacheDir;
+    string ck;
+    string libsFile;
+    string cpFile;
+    string jvmFile;
+    string mainFile;
+    string cp;
+    string jvmCacheOpts;
+    string mainCacheOpts;
+
+    string javaCmd;
+
+    bool stale = false;
+}
+
+
 Opts parseArgs(string[] args)
 {
     Opts opts;
@@ -246,23 +279,17 @@ string makeConfigStr(string[] config_paths)
     return "";
 }
 
-string makeChecksum(string[] resolveAliases,
-                    string[] classpathAliases,
-                    string[] allAliases,
-                    string[] jvmAliases,
-                    string[] mainAliases,
-                    string depsData,
-                    string[] configPaths)
+string makeChecksum(in ref Vars vars, in ref Opts opts)
 {
-    string val = join([resolveAliases.join(),
-                       classpathAliases.join(),
-                       allAliases.join(),
-                       jvmAliases.join(),
-                       mainAliases.join(),
-                       depsData],
+    string val = join([opts.resolveAliases.join(),
+                       opts.classpathAliases.join(),
+                       opts.allAliases.join(),
+                       opts.jvmAliases.join(),
+                       opts.mainAliases.join(),
+                       opts.depsData],
                        "|");
 
-    foreach (string configPath; configPaths)
+    foreach (string configPath; vars.configPaths)
     {
         if (exists(configPath))
             val ~= "|" ~ configPath;
@@ -282,51 +309,37 @@ string makeChecksum(string[] resolveAliases,
     return u.text();
 }
 
-void printVerbose()
-{
-}
-
 string determineConfigDir()
 {
     return "";
 }
 
-void printVerbose(string toolsVersion,
-                  string installDir,
-                  string configDir,
-                  string[] configPaths,
-                  string cacheDir,
-                  string cpFile)
+void printVerbose(in ref Vars vars) 
 {
-    writeln("version      = ", toolsVersion);
-    writeln("install_dir  = ", installDir);
-    writeln("config_dir   = ", configDir);
-    writeln("config_paths = ", join(configPaths, " "));
-    writeln("cache_dir    = ", cacheDir);
-    writeln("cp_file      = ", cpFile);
+    writeln("version      = ", vars.toolsVersion);
+    writeln("install_dir  = ", vars.installDir);
+    writeln("config_dir   = ", vars.configDir);
+    writeln("config_paths = ", join(vars.configPaths, " "));
+    writeln("cache_dir    = ", vars.cacheDir);
+    writeln("cp_file      = ", vars.cpFile);
     writeln();
 }
 
-void printDescribe(string toolsVersion,
-                   string[] configPaths,
-                   string installDir,
-                   string configDir,
-                   string cacheDir,
-                   Opts opts)
+void printDescribe(in ref Vars vars, in ref Opts opts)
 {
     string[] pathVector;
 
-    foreach(path; configPaths)
+    foreach(path; vars.configPaths)
     {
         if (isFile(path))
             pathVector ~= path;
     }
 
-    writefln(`{:version "%s"`, toolsVersion);
+    writefln(`{:version "%s"`, vars.toolsVersion);
     writefln(` :config-files [%(%s %)]`, pathVector);
-    writefln(` :install-dir "%s"`, installDir);
-    writefln(` :config-dir "%s"`, configDir);
-    writefln(` :cache-dir "%s"`, cacheDir);
+    writefln(` :install-dir "%s"`, vars.installDir);
+    writefln(` :config-dir "%s"`, vars.configDir);
+    writefln(` :cache-dir "%s"`, vars.cacheDir);
     writeln( ` :force `, opts.force);
     writeln( ` :repro `, opts.repro);
     writefln(` :resolve-aliases "%s"`, join(opts.resolveAliases, " "));
@@ -336,7 +349,6 @@ void printDescribe(string toolsVersion,
     writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
 }
 
-<<<<<<< HEAD
 bool newerThan(string file1, string file2)
 {
     import std.file: timeLastModified;
@@ -344,14 +356,7 @@ bool newerThan(string file1, string file2)
 
     return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
 }
-=======
-bool newerThan(string fnameA, string fnameB)
-{
-    return false;
-}
-
 string[] makeToolsArgs()
 {
     return ["a", "b"];
 }
->>>>>>> e6294f9f6aee07c6615d62aca25f8d89a1c17f08
