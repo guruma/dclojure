@@ -81,11 +81,6 @@ struct Vars
 {
     string toolsVersion;
     string toolsJar;
-    string[] resolveAliases;
-    string[] classpathAliases;
-    string[] allAliases;
-    string[] jvmAliases;
-    string[] mainAliases;
     string[] configPaths;
     string[] toolsArgs;
     string installDir;

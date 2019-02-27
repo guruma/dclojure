@@ -34,9 +34,7 @@ void main(string[] args)
     if (opts.resolveTags)
     {
         if (exists("deps.edn"))
-        {
             resolveTags(vars);
-        }
         else
         {
             writeln("deps.edn does not exist");

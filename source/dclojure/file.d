@@ -102,7 +102,7 @@ string readText(string fname)
 bool newerThan(string file1, string file2)
 {
     import std.file: timeLastModified;
-    import std.datetime : abs, seconds;
+    import std.datetime: abs, seconds;
 
     try
     {
