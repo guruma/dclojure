@@ -349,14 +349,25 @@ void printDescribe(in ref Vars vars, in ref Opts opts)
     writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
 }
 
-bool newerThan(string file1, string file2)
+string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 {
-    import std.file: timeLastModified;
-    import std.datetime : abs, seconds;
+    string[] toolsArgs;
 
-    return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
-}
-string[] makeToolsArgs()
-{
-    return ["a", "b"];
+    if(! vars.depsData.empty())
+        toolsArgs ~= ["--config-data", vars.depsData];
+
+    if(! opts.resolveAliases.empty())
+        toolsArgs ~= ["-R" ~ opts.resolveAliases.join()];
+    if(! opts.classpathAliases.empty())
+        toolsArgs ~= ["-C" ~ opts.classpathAliases.join()];
+    if(! opts.jvmAliases.empty())
+        toolsArgs ~= ["-J" ~ opts.jvmAliases.join()];
+    if(! opts.mainAliases.empty())
+        toolsArgs ~= ["-M" ~ opts.mainAliases.join()];
+    if(! opts.allAliases.empty())
+        toolsArgs ~= ["-A" ~ opts.allAliases.join()];
+    if(! opts.forceCp.empty())
+        toolsArgs ~= ["--skip-cp"];
+
+    return toolsArgs;
 }
