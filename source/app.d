@@ -106,41 +106,11 @@ void normal (string[] args)
 
     debug writeln("libsFile = ", libsFile);
 
-
     if (opts.verbose)
-    {
-        writeln("version      = ", toolsVersion);
-        writeln("install_dir  = ", installDir);
-        writeln("config_dir   = ", configDir);
-        writeln("config_paths = ", join(configPaths, " "));
-        writeln("cache_dir    = ", cacheDir);
-        writeln("cp_file      = ", cpFile);
-        writeln();
-    }
+        printVerbose(toolsVersion, installDir, configDir, configPaths, cacheDir, cpFile);
 
     if (opts.describe)
-    {
-        string[] pathVector;
-
-        foreach(path; configPaths)
-        {
-            if (isFile(path))
-                pathVector ~= path;
-        }
-
-        writefln(`{:version "%s"`, toolsVersion);
-        writefln(` :config-files [%(%s %)]`, pathVector);
-        writefln(` :install-dir "%s"`, installDir);
-        writefln(` :config-dir "%s"`, configDir);
-        writefln(` :cache-dir "%s"`, cacheDir);
-        writeln( ` :force `, opts.force);
-        writeln( ` :repro `, opts.repro);
-        writefln(` :resolve-aliases "%s"`, join(opts.resolveAliases, " "));
-        writefln(` :classpath-aliases "%s"`, join(opts.classpathAliases, " "));
-        writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
-        writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
-        writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
-    }
+        printDescribe(toolsVersion, configPaths, installDir, configDir, cacheDir, opts);
 }
 
 void test1(string[] args)
