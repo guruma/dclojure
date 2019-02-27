@@ -110,7 +110,7 @@ bool newerThan(string file1, string file2)
     }
     catch(Exception e)
     {
-        return "";
+        return false;
     }
 }
 
