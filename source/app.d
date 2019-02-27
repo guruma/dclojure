@@ -126,10 +126,10 @@ void main(string[] args)
     else
     {
         if (vars.jvmFile.exists)
-            vars.jvmCacheOpts = readText(vars.jvmFile);
+            vars.jvmCacheOpts = [readText(vars.jvmFile)];
 
         if (vars.mainFile.exists)
-            vars.mainCacheOpts = readText(vars.mainFile);
+            vars.mainCacheOpts = [readText(vars.mainFile)];
 
         runClojure(vars, opts);
     }

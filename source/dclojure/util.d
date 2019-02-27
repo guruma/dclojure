@@ -9,7 +9,7 @@ import std.stdio,
 
 import std.process : env = environment, executeShell;
 
-/// helpMessage
+
 string helpMessage = q"END
 Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
        dclj     [dep-opt*] [init-opt*] [main-opt] [arg*]
@@ -96,14 +96,13 @@ struct Vars
     string jvmFile;
     string mainFile;
     string cp;
-    string jvmCacheOpts;
-    string mainCacheOpts;
+    string[] jvmCacheOpts;
+    string[] mainCacheOpts;
 
     string javaCmd;
 
     bool stale = false;
 }
-
 
 Opts parseArgs(string[] args)
 {
@@ -157,7 +156,6 @@ Opts parseArgs(string[] args)
     }
     return opts;
 }
-
 
 string findCmdPath(string cmd)
 {
@@ -345,18 +343,60 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 
 void makeClasspath(in ref Vars vars, in ref Opts opts)
 {
+    string cmd = join([vars.javaCmd, 
+                       "-Xmx256m",
+                       "-classpath", vars.toolsCp, 
+                       "clojure.main -m clojure.tools.deps.alpha.script.make-classpath",
+                       "--config-files", vars.configStr,
+                       "--libs-file", vars.libsFile,
+                       "--cp-file", vars.cpFile,
+                       "--jvm-file", vars.jvmFile,
+                       "--main-file", vars.mainFile,
+                       vars.toolsArgs.join()],
+                       " ");
+
+    runJava(cmd);
 }
 
 void generateManifest(in ref Vars vars, in ref Opts opts)
 {
+    string cmd = join([vars.javaCmd, 
+                       "-Xmx256m",
+                       "-classpath", vars.toolsCp, 
+                       "clojure.main -m clojure.tools.deps.alpha.script.generate-mainifest",
+                       "--config-files", vars.configStr,
+                       "--gen=pom",
+                       vars.toolsArgs.join()],
+                       " ");
+
+    runJava(cmd);
 }
 
 void printTree(in ref Vars vars, in ref Opts opts)
 {
+    string cmd = join([vars.javaCmd, 
+                       "-Xmx256m",
+                       "-classpath", vars.toolsCp, 
+                       "clojure.main -m clojure.tools.deps.alpha.script.print-tree",
+                       "--libs-files", vars.libsFile],
+                       " ");
+
+    runJava(cmd);
 }
 
 void runClojure(in ref Vars vars, in ref Opts opts)
 {
+    string cmd = join([vars.javaCmd, 
+                       vars.jvmCacheOpts.join(),
+                       opts.jvmOpts.join(),
+                       "Dclojure.libfile=", vars.libsFile,
+                       "-classpath", vars.cp,
+                       "clojure.main", vars.mainCacheOpts.join()],
+                       " ");
+
+    runJava(cmd);
+
+  //exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 }
 
 void createUserConfigDir(in ref Vars vars)
