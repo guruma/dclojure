@@ -125,7 +125,7 @@ void normal (string[] args)
 
     if(vars.stale || opts.pom)
     {
-        vars.toolsArgs = makeToolsArgs();
+        vars.toolsArgs = makeToolsArgs(vars, opts);
     }
     
     if(vars.stale && ! opts.describe)
