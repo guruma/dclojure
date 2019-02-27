@@ -104,7 +104,14 @@ bool newerThan(string file1, string file2)
     import std.file: timeLastModified;
     import std.datetime : abs, seconds;
 
-    return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
+    try
+    {
+        return (file1.timeLastModified - file2.timeLastModified) > 0.seconds;
+    }
+    catch(Exception e)
+    {
+        return "";
+    }
 }
 
 unittest 
