@@ -83,6 +83,7 @@ struct Vars
     string toolsJar;
     string[] configPaths;
     string[] toolsArgs;
+    string[] args;
     string installDir;
     string toolsCp;
     string depsData;
