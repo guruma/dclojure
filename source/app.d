@@ -14,9 +14,14 @@ void main(string[] args)
     Vars vars;
     vars.toolsVersion = "1.10.0.414";
     vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
+    vars.args = args[1 .. $];
 
+<<<<<<< HEAD
     auto args1 = args[1 .. $];
     Opts opts = parseArgs(args1);
+=======
+    Opts opts = parseArgs(vars.args);
+>>>>>>> 52f96c298a8bd5d8cfb7e9bc6a803a6aa0359185
 
     vars.javaCmd = findJava();
 
