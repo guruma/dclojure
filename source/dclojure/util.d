@@ -54,8 +54,6 @@ For more info, see:
  https://clojure.org/reference/repl_and_main
 END";
 
-
-/// Opts
 struct Opts
 {
     string[] jvmOpts = [];
@@ -99,9 +97,7 @@ struct Vars
     string cp;
     string[] jvmCacheOpts;
     string[] mainCacheOpts;
-
     string javaCmd;
-
     bool stale = false;
 }
 
@@ -229,7 +225,6 @@ void execJava(string cmd, string[] args)
     execv(cmd, args);
 }
 
-
 string determineUserConfigDir()
 {
     string dir = env.get("CLJ_CONFIG");
@@ -264,11 +259,11 @@ string determineUserCacheDir(string configDir)
 
 void resolveTags(in ref Vars vars)
 {
-    string cmd = join([vars.javaCmd, 
-                       "-Xmx256m -classpath", 
-                       vars.toolsCp, 
-                       "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"],
-                       " ");
+    string cmd = [vars.javaCmd,
+                  "-Xmx256m -classpath",
+                  vars.toolsCp,
+                  "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
+                 ].join(" ");
 
     runJava(cmd);
 }
@@ -280,13 +275,13 @@ string makeClasspath()
 
 string makeChecksum(in ref Vars vars, in ref Opts opts)
 {
-    string val = join([opts.resolveAliases.join(),
-                       opts.classpathAliases.join(),
-                       opts.allAliases.join(),
-                       opts.jvmAliases.join(),
-                       opts.mainAliases.join(),
-                       opts.depsData],
-                       "|");
+    string val = [opts.resolveAliases.join(),
+                  opts.classpathAliases.join(),
+                  opts.allAliases.join(),
+                  opts.jvmAliases.join(),
+                  opts.mainAliases.join(),
+                  opts.depsData
+                 ].join("|");
 
     foreach (string configPath; vars.configPaths)
     {
@@ -385,28 +380,24 @@ void makeClasspath(in ref Vars vars, in ref Opts opts)
 
 void generateManifest(in ref Vars vars, in ref Opts opts)
 {
-    string cmd = [vars.javaCmd, 
-                  "-Xmx256m",
-                  "-classpath", vars.toolsCp, 
-                  "clojure.main -m clojure.tools.deps.alpha.script.generate-mainifest",
-                  "--config-files", vars.configStr,
-                  "--gen=pom",
-                  vars.toolsArgs.join()
-                 ].join(" ");
+    string[] args = ["-Xmx256m",
+                     "-classpath", vars.toolsCp,
+                     "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
+                     "--config-files", vars.configStr,
+                     "--gen=pom",
+                     vars.toolsArgs.join()];
 
-    runJava(cmd);
+    execJava(vars.javaCmd, args);
 }
 
 void printTree(in ref Vars vars, in ref Opts opts)
 {
-    string cmd = [vars.javaCmd, 
-                  "-Xmx256m",
-                  "-classpath", vars.toolsCp, 
-                  "clojure.main -m clojure.tools.deps.alpha.script.print-tree",
-                  "--libs-file", vars.libsFile
-                 ].join(" ");
+    string[] args = ["-Xmx256m",
+                     "-classpath", vars.toolsCp,
+                     "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
+                     "--libs-file", vars.libsFile];
 
-    runJava(cmd);
+    execJava(vars.javaCmd, args);
 }
 
 void runClojure(in ref Vars vars, in ref Opts opts)
