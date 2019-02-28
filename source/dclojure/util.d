@@ -379,7 +379,7 @@ void printTree(in ref Vars vars, in ref Opts opts)
                        "-Xmx256m",
                        "-classpath", vars.toolsCp, 
                        "clojure.main -m clojure.tools.deps.alpha.script.print-tree",
-                       "--libs-files", vars.libsFile],
+                       "--libs-file", vars.libsFile],
                        " ");
 
     runJava(cmd);
