@@ -7,7 +7,7 @@ import std.stdio,
        dclojure.file,
        std.array;
 
-import std.process : env = environment, executeShell;
+import std.process : env = environment, executeShell, execv;
 
 
 string helpMessage = q"END
@@ -224,6 +224,12 @@ void runJava(string cmd)
     auto ls = executeShell(cmd);
 }
 
+void execJava(string cmd, string[] args)
+{
+    execv(cmd, args);
+}
+
+
 string determineUserConfigDir()
 {
     string dir = env.get("CLJ_CONFIG");
@@ -405,16 +411,13 @@ void printTree(in ref Vars vars, in ref Opts opts)
 
 void runClojure(in ref Vars vars, in ref Opts opts)
 {
-    string cmd = [vars.javaCmd, 
-                  vars.jvmCacheOpts.join(),
-                  opts.jvmOpts.join(),
-                  "-Dclojure.libfile=" ~ vars.libsFile,
-                  "-classpath", vars.cp,
-                  "clojure.main", vars.mainCacheOpts.join(),
-                  vars.args.join(" ")
-                 ].join(" ");
-
-    runJava(cmd);
+    string[] args = [vars.jvmCacheOpts.join(),
+                     opts.jvmOpts.join(),
+                     "-Dclojure.libfile=" ~ vars.libsFile,
+                     "-classpath", vars.cp,
+                     "clojure.main", vars.mainCacheOpts.join(),
+                     vars.args.join(" ")].filter!(str => !str.empty).array;
+    execJava(vars.javaCmd, args);
 }
 
 void createUserConfigDir(in ref Vars vars)
