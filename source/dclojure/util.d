@@ -168,7 +168,10 @@ Opts parseArgs(ref string[] args)
                 opts.help = true;
         } 
         else
+        {
+            args = [arg] ~ args;
             break;
+        }
     }
     return opts;
 }
