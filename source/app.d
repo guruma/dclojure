@@ -50,13 +50,14 @@ void main(string[] args)
     vars.userCacheDir = determineUserCacheDir(vars.configDir);
 
     if (opts.repro)
-        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), "deps.edn"];
+        vars.configPaths = [buildPath(vars.installDir, "deps.edn"), 
+                            "deps.edn"];
     else
         vars.configPaths = [buildPath(vars.installDir, "deps.edn"), 
                             buildPath(vars.configDir, "deps.edn"), 
                             "deps.edn"];
 
-    vars.configStr = join(vars.configPaths, ",");
+    vars.configStr = vars.configPaths.join(",");
 
     debug writeln("configDir = ", vars.configDir);
     debug writeln("userCacheDir = ", vars.userCacheDir);
@@ -88,9 +89,10 @@ void main(string[] args)
         vars.stale = true;
     else
     {
+        // if any file is dirty, set stale
         foreach(configPath; vars.configPaths)
         {
-            if(newerThan(configPath, vars.cpFile))
+            if (newerThan(configPath, vars.cpFile))
             {
                 vars.stale = true;
                 break;
@@ -104,26 +106,28 @@ void main(string[] args)
     // If stale, run make-classpath to refresh cached classpath
     if (vars.stale && !opts.describe)
     {
-        if(opts.verbose)
+        if (opts.verbose)
             writeln("Refreshing classpath");
-        makeClasspath(vars, opts);
+        makeClasspath(vars);
     }
 
+    // classpath
     if (opts.describe)
         vars.cp = "";
-    else if(! opts.forceCp.empty())
+    else if (!opts.forceCp.empty)
         vars.cp = opts.forceCp;
     else
         vars.cp = readText(vars.cpFile);
 
+    // at last...
     if (opts.pom)
-        generateManifest(vars, opts);
-    else if(opts.printClasspath)
+        generateManifest(vars);
+    else if (opts.printClasspath)
         writeln(vars.cp);
-    else if(opts.describe)
+    else if (opts.describe)
         printDescribe(vars, opts);
-    else if(opts.tree)
-        printTree(vars, opts);
+    else if (opts.tree)
+        printTree(vars);
     else
     {
         if (vars.jvmFile.exists)

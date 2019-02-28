@@ -10,50 +10,6 @@ import std.stdio,
 import std.process : env = environment, executeShell, execv;
 
 
-string helpMessage = q"END
-Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
-       dclj     [dep-opt*] [init-opt*] [main-opt] [arg*]
-
-dclojure is a runner for Clojure written in the D language.
-dclj is a wrapper for interactive repl use. 
-These programs ultimately construct and invoke a command-line of the form:
-
-java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
-
-The dep-opts are used to build the java-opts and classpath:
- -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
- -Oalias...     Concatenated jvm option aliases, ex: -O:mem
- -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
- -Calias...     Concatenated make-classpath aliases, ex: -C:dev
- -Malias...     Concatenated main option aliases, ex: -M:test
- -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
- -Sdeps EDN     Deps data to use as the last deps file to be merged
- -Spath         Compute classpath and echo to stdout only
- -Scp CP        Do NOT compute or cache classpath, use this one instead
- -Srepro        Ignore the ~/.clojure/deps.edn config file
- -Sforce        Force recomputation of the classpath (don't use the cache)
- -Spom          Generate (or update existing) pom.xml with deps and paths
- -Stree         Print dependency tree
- -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
- -Sverbose      Print important path info to console
- -Sdescribe     Print environment and command parsing info as data
-
-init-opt:
- -i, --init path     Load a file or resource
- -e, --eval string   Eval exprs in string; print non-nil values
-
-main-opt:
- -m, --main ns-name  Call the -main function from namespace w/args
- -r, --repl          Run a repl
- path                Run a script from a file or resource
- -                   Run a script from standard input
- -h, -?, --help      Print this help message and exit
-
-For more info, see:
- https://clojure.org/guides/deps_and_cli
- https://clojure.org/reference/repl_and_main
-END";
-
 struct Opts
 {
     string[] jvmOpts = [];
@@ -158,7 +114,7 @@ Opts parseArgs(ref string[] args)
             writeln("Invalid option: ", arg);
         else if (arg == "-h" || arg == "--help" || arg == "-?")
         {
-            if (opts.mainAliases.length > 0 || opts.allAliases.length > 0)
+            if (!opts.mainAliases.empty || !opts.allAliases.empty)
                 break;
             else
                 opts.help = true;
@@ -268,11 +224,6 @@ void resolveTags(in ref Vars vars)
     runJava(cmd);
 }
 
-string makeClasspath()
-{
-    return "";
-}
-
 string makeChecksum(in ref Vars vars, in ref Opts opts)
 {
     string val = [opts.resolveAliases.join(),
@@ -308,7 +259,7 @@ void printVerbose(in ref Vars vars)
     writeln("version      = ", vars.toolsVersion);
     writeln("install_dir  = ", vars.installDir);
     writeln("config_dir   = ", vars.configDir);
-    writeln("config_paths = ", join(vars.configPaths, " "));
+    writeln("config_paths = ", vars.configPaths.join(" "));
     writeln("cache_dir    = ", vars.cacheDir);
     writeln("cp_file      = ", vars.cpFile);
     writeln();
@@ -331,37 +282,37 @@ void printDescribe(in ref Vars vars, in ref Opts opts)
     writefln(` :cache-dir "%s"`, vars.cacheDir);
     writeln( ` :force `, opts.force);
     writeln( ` :repro `, opts.repro);
-    writefln(` :resolve-aliases "%s"`, join(opts.resolveAliases, " "));
-    writefln(` :classpath-aliases "%s"`, join(opts.classpathAliases, " "));
-    writefln(` :jvm-aliases "%s"`, join(opts.jvmAliases, " "));
-    writefln(` :main-aliases "%s"`, join(opts.mainAliases, " "));
-    writefln(` :all-aliases "%s"}`, join(opts.allAliases, " "));
+    writefln(` :resolve-aliases "%s"`, opts.resolveAliases.join(" "));
+    writefln(` :classpath-aliases "%s"`, opts.classpathAliases.join(" "));
+    writefln(` :jvm-aliases "%s"`, opts.jvmAliases.join(" "));
+    writefln(` :main-aliases "%s"`, opts.mainAliases.join(" "));
+    writefln(` :all-aliases "%s"}`, opts.allAliases.join(" "));
 }
 
 string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 {
     string[] toolsArgs;
 
-    if(! vars.depsData.empty())
+    if (!vars.depsData.empty())
         toolsArgs ~= ["--config-data", vars.depsData];
 
-    if(! opts.resolveAliases.empty())
+    if (!opts.resolveAliases.empty)
         toolsArgs ~= ["-R" ~ opts.resolveAliases.join()];
-    if(! opts.classpathAliases.empty())
+    if (!opts.classpathAliases.empty)
         toolsArgs ~= ["-C" ~ opts.classpathAliases.join()];
-    if(! opts.jvmAliases.empty())
+    if (!opts.jvmAliases.empty)
         toolsArgs ~= ["-J" ~ opts.jvmAliases.join()];
-    if(! opts.mainAliases.empty())
+    if (!opts.mainAliases.empty)
         toolsArgs ~= ["-M" ~ opts.mainAliases.join()];
-    if(! opts.allAliases.empty())
+    if (!opts.allAliases.empty)
         toolsArgs ~= ["-A" ~ opts.allAliases.join()];
-    if(! opts.forceCp.empty())
+    if (!opts.forceCp.empty)
         toolsArgs ~= ["--skip-cp"];
 
     return toolsArgs;
 }
 
-void makeClasspath(in ref Vars vars, in ref Opts opts)
+void makeClasspath(in ref Vars vars)
 {
     string cmd = [vars.javaCmd, 
                   "-Xmx256m",
@@ -378,24 +329,27 @@ void makeClasspath(in ref Vars vars, in ref Opts opts)
     runJava(cmd);
 }
 
-void generateManifest(in ref Vars vars, in ref Opts opts)
+void generateManifest(in ref Vars vars)
 {
     string[] args = ["-Xmx256m",
                      "-classpath", vars.toolsCp,
                      "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
                      "--config-files", vars.configStr,
                      "--gen=pom",
-                     vars.toolsArgs.join()];
+                     vars.toolsArgs.join()
+                    ].filter!(str => !str.empty).array;
 
     execJava(vars.javaCmd, args);
 }
 
-void printTree(in ref Vars vars, in ref Opts opts)
+// in 이면 에러다. 왜?
+void printTree(ref Vars vars)
 {
     string[] args = ["-Xmx256m",
                      "-classpath", vars.toolsCp,
                      "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
-                     "--libs-file", vars.libsFile];
+                     "--libs-file", vars.libsFile
+                    ].filter!(str => !str.empty).array;
 
     execJava(vars.javaCmd, args);
 }
@@ -407,7 +361,9 @@ void runClojure(in ref Vars vars, in ref Opts opts)
                      "-Dclojure.libfile=" ~ vars.libsFile,
                      "-classpath", vars.cp,
                      "clojure.main", vars.mainCacheOpts.join(),
-                     vars.args.join(" ")].filter!(str => !str.empty).array;
+                     vars.args.join(" ")
+                    ].filter!(str => !str.empty).array;
+
     execJava(vars.javaCmd, args);
 }
 
@@ -422,4 +378,48 @@ void createUserConfigDir(in ref Vars vars)
        copy(buildPath(vars.installDir, "example-deps.edn"), 
             buildPath(vars.configDir, "deps.edn"));
 }
+
+string helpMessage = q"END
+Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
+       dclj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+
+dclojure is a runner for Clojure written in the D language.
+dclj is a wrapper for interactive repl use. 
+These programs ultimately construct and invoke a command-line of the form:
+
+java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
+
+The dep-opts are used to build the java-opts and classpath:
+ -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+ -Oalias...     Concatenated jvm option aliases, ex: -O:mem
+ -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
+ -Calias...     Concatenated make-classpath aliases, ex: -C:dev
+ -Malias...     Concatenated main option aliases, ex: -M:test
+ -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
+ -Sdeps EDN     Deps data to use as the last deps file to be merged
+ -Spath         Compute classpath and echo to stdout only
+ -Scp CP        Do NOT compute or cache classpath, use this one instead
+ -Srepro        Ignore the ~/.clojure/deps.edn config file
+ -Sforce        Force recomputation of the classpath (don't use the cache)
+ -Spom          Generate (or update existing) pom.xml with deps and paths
+ -Stree         Print dependency tree
+ -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
+ -Sverbose      Print important path info to console
+ -Sdescribe     Print environment and command parsing info as data
+
+init-opt:
+ -i, --init path     Load a file or resource
+ -e, --eval string   Eval exprs in string; print non-nil values
+
+main-opt:
+ -m, --main ns-name  Call the -main function from namespace w/args
+ -r, --repl          Run a repl
+ path                Run a script from a file or resource
+ -                   Run a script from standard input
+ -h, -?, --help      Print this help message and exit
+
+For more info, see:
+ https://clojure.org/guides/deps_and_cli
+ https://clojure.org/reference/repl_and_main
+END";
 
