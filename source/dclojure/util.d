@@ -408,15 +408,13 @@ void runClojure(in ref Vars vars, in ref Opts opts)
     string cmd = [vars.javaCmd, 
                   vars.jvmCacheOpts.join(),
                   opts.jvmOpts.join(),
-                  "Dclojure.libfile=", vars.libsFile,
+                  "-Dclojure.libfile=" ~ vars.libsFile,
                   "-classpath", vars.cp,
                   "clojure.main", vars.mainCacheOpts.join(),
                   vars.args.join(" ")
                  ].join(" ");
 
     runJava(cmd);
-
-  //exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 }
 
 void createUserConfigDir(in ref Vars vars)
