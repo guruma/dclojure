@@ -15,7 +15,8 @@ void main(string[] args)
     vars.toolsVersion = "1.10.0.414";
     vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
 
-    Opts opts = parseArgs(args[1 .. $]);
+    auto args1 = args[1 .. $];
+    Opts opts = parseArgs(args1);
 
     vars.javaCmd = findJava();
 
@@ -145,7 +146,8 @@ void test1(string[] args)
     runJava("/usr/bin/java -version");
     writeln("configDir = ", determineUserConfigDir());
 
-    Opts opts = parseArgs(args[1 .. $]);
+    auto args1 = args[1 .. $];
+    Opts opts = parseArgs(args1);
     writeln("opts = ", opts);
 
     writeln(helpMessage);

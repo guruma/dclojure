@@ -104,14 +104,23 @@ struct Vars
     bool stale = false;
 }
 
-Opts parseArgs(string[] args)
+Opts parseArgs(ref string[] args)
 {
+    import std.algorithm: remove;
+
     Opts opts;
 
-    for (int i=0; i < args.length; i++)
+    void shift()
     {
-        string arg = args[i];
+        if (args.length > 0)
+            popFront(args);
+    }
 
+    while (args.length > 0)
+    {
+        string arg = args[0];
+        shift();
+ 
         if (startsWith(arg, "-J"))
             opts.jvmOpts ~= arg[2 .. $];
         else if (startsWith(arg, "-R"))
@@ -125,9 +134,15 @@ Opts parseArgs(string[] args)
         else if (startsWith(arg, "-A"))
             opts.allAliases ~= arg[2 .. $];
         else if (arg == "-Sdeps")
-            opts.depsData = args[++i];
+        {
+            opts.depsData = args[0];
+            shift();
+        }
         else if (arg == "-Scp")
-            opts.forceCp = args[++i];
+        {
+            opts.forceCp = args[0];
+            shift();
+        }
         else if (arg == "-Spath")
             opts.printClasspath = true;
         else if (arg == "-Sverbose")
@@ -144,6 +159,8 @@ Opts parseArgs(string[] args)
             opts.pom = true;
         else if (arg == "-Sresolve-tags")
             opts.resolveTags = true;
+        else if (startsWith(arg, "-S"))
+            writeln("Invalid option: ", arg);
         else if (arg == "-h" || arg == "--help" || arg == "-?")
         {
             if (opts.mainAliases.length > 0 || opts.allAliases.length > 0)
@@ -152,7 +169,7 @@ Opts parseArgs(string[] args)
                 opts.help = true;
         } 
         else
-            writeln("Invalid option: ", arg);
+            break;
     }
     return opts;
 }
