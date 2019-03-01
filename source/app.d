@@ -44,7 +44,7 @@ void main(string[] args)
     }
 
     vars.configDir = determineUserConfigDir();
-
+ 
     createUserConfigDir(vars);
 
     vars.userCacheDir = determineUserCacheDir(vars.configDir);
@@ -59,10 +59,6 @@ void main(string[] args)
 
     vars.configStr = vars.configPaths.join(",");
 
-    debug writeln("configDir = ", vars.configDir);
-    debug writeln("userCacheDir = ", vars.userCacheDir);
-    debug writeln("configPaths = ", vars.configPaths);
-    debug writeln("configStr = ", vars.configStr);
 
     // Determine whether to use user or project cache
     if (exists("deps.edn"))
@@ -70,8 +66,6 @@ void main(string[] args)
     else
         vars.cacheDir = vars.userCacheDir;
 
-    debug writeln("cacheDir = ", vars.cacheDir);
-    debug writeln("userCacheDir = ", vars.userCacheDir);
 
     // Construct location of cached classpath file
     vars.ck = makeChecksum(vars, opts);
@@ -80,7 +74,6 @@ void main(string[] args)
     vars.jvmFile  = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
     vars.mainFile = buildPath(vars.cacheDir, vars.ck ~ ".main");
 
-    debug writeln("libsFile = ", vars.libsFile);
 
     if (opts.verbose)
         printVerbose(vars);
@@ -140,22 +133,6 @@ void main(string[] args)
     }
 }
 
-
-void test1(string[] args)
-{
-    string configDir;
-
-    if ("dclojure".exists) writeln("exist");
- 
-    runJava("/usr/bin/java -version");
-    writeln("configDir = ", determineUserConfigDir());
-
-    auto args1 = args[1 .. $];
-    Opts opts = parseArgs(args1);
-    writeln("opts = ", opts);
-
-    writeln(helpMessage);
- }
 
 void test2()
 {
