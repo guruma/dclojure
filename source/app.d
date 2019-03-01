@@ -90,7 +90,7 @@ void main(string[] args)
     else
     {
         // if any file is dirty, set stale
-        foreach(configPath; vars.configPaths)
+        foreach (configPath; vars.configPaths)
         {
             if (newerThan(configPath, vars.cpFile))
             {

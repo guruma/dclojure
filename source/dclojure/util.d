@@ -176,9 +176,9 @@ void runJava(string cmd)
     auto ls = executeShell(cmd);
 }
 
-void execJava(string cmd, string[] args)
+void execJava(string[] cmd)
 {
-    execv(cmd, args);
+    execv(cmd[0], cmd);
 }
 
 string determineUserConfigDir()
@@ -331,40 +331,43 @@ void makeClasspath(in ref Vars vars)
 
 void generateManifest(in ref Vars vars)
 {
-    string[] args = ["-Xmx256m",
-                     "-classpath", vars.toolsCp,
-                     "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
-                     "--config-files", vars.configStr,
-                     "--gen=pom",
-                     vars.toolsArgs.join()
-                    ].filter!(str => !str.empty).array;
+    string[] cmd = [vars.javaCmd,
+                    "-Xmx256m",
+                    "-classpath", vars.toolsCp,
+                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
+                    "--config-files", vars.configStr,
+                    "--gen=pom",
+                    vars.toolsArgs.join()
+                   ].filter!(str => !str.empty).array;
 
-    execJava(vars.javaCmd, args);
+    execJava(cmd);
 }
 
 // in 이면 에러다. 왜?
 void printTree(ref Vars vars)
 {
-    string[] args = ["-Xmx256m",
-                     "-classpath", vars.toolsCp,
-                     "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
-                     "--libs-file", vars.libsFile
-                    ].filter!(str => !str.empty).array;
+    string[] cmd = [vars.javaCmd,
+                    "-Xmx256m",
+                    "-classpath", vars.toolsCp,
+                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
+                    "--libs-file", vars.libsFile
+                   ].filter!(str => !str.empty).array;
 
-    execJava(vars.javaCmd, args);
+    execJava(cmd);
 }
 
 void runClojure(in ref Vars vars, in ref Opts opts)
 {
-    string[] args = [vars.jvmCacheOpts.join(),
-                     opts.jvmOpts.join(),
-                     "-Dclojure.libfile=" ~ vars.libsFile,
-                     "-classpath", vars.cp,
-                     "clojure.main", vars.mainCacheOpts.join(),
-                     vars.args.join(" ")
-                    ].filter!(str => !str.empty).array;
+    string[] cmd = [vars.javaCmd,
+                    vars.jvmCacheOpts.join(),
+                    opts.jvmOpts.join(),
+                    "-Dclojure.libfile=" ~ vars.libsFile,
+                    "-classpath", vars.cp,
+                    "clojure.main", vars.mainCacheOpts.join(),
+                    vars.args.join(" ")
+                   ].filter!(str => !str.empty).array;
 
-    execJava(vars.javaCmd, args);
+    execJava(cmd);
 }
 
 void createUserConfigDir(in ref Vars vars)
