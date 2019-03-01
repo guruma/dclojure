@@ -19,6 +19,7 @@ void main(string[] args)
     Opts opts = parseArgs(vars.args);
 
     vars.javaCmd = findJava();
+    version (Windows) vars.javaCmd = `"` ~ vars.javaCmd ~ `"`;
 
     if (opts.help)
         writeln(helpMessage);
