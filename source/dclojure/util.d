@@ -137,15 +137,10 @@ string findCmdPath(string cmd)
     {
         cmdPath = buildPath(absolutePath(path), cmd);
         if (cmdPath.isExec)
-            break;
-        else
-            cmdPath = null; 
+            return cmdPath;
     }
 
-    if (cmdPath)
-      return cmdPath;
-    else
-      return null; 
+    return null; 
 }
 
 string findJava()
@@ -173,7 +168,7 @@ string findJava()
 
 void runJava(string cmd)
 {
-    auto ls = executeShell(cmd);
+    auto result = executeShell(cmd);
 }
 
 void execJava(string[] cmd)
