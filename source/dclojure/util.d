@@ -421,3 +421,17 @@ For more info, see:
  https://clojure.org/reference/repl_and_main
 END";
 
+
+// for internal debugging
+void printStruct(S)(S s)
+{
+    auto fields = __traits(allMembers, typeof(s));
+    auto values = s.tupleof;
+
+    writeln();
+    foreach (index, value; values)
+    {
+        writefln("%s = %s", fields[index], value);
+    }
+    writeln();
+}
