@@ -2,14 +2,11 @@ module dclojure.util;
 
 import std.stdio, 
        std.string, 
+       std.process,
        std.path,
        std.algorithm,
-       dclojure.file,
-       std.array;
-
-import std.process : env = environment, executeShell, execv, spawnProcess, wait;
-import core.stdc.stdlib: exit;
-
+       std.array, 
+       dclojure.file;
 
 struct Opts
 {
@@ -131,7 +128,7 @@ Opts parseArgs(ref string[] args)
 
 string findExecutable(string cmd)
 {
-    string envPath = env.get("PATH");
+    string envPath = environment.get("PATH");
     
     string cmdPath;
     foreach (path; envPath.split(pathSeparator))
@@ -154,7 +151,7 @@ string findJava()
     if (!javaPath.empty)
         return javaPath;
 
-    string javaHome = env.get("JAVA_HOME");
+    string javaHome = environment.get("JAVA_HOME");
 
     if (javaHome.empty)
         return null;
@@ -169,18 +166,20 @@ string findJava()
 
 void runJava(string cmd)
 {
-    auto result = executeShell(cmd);
+    executeShell(cmd);
 }
 
 void execJava(string[] cmd)
 {
     version(Posix)
     {
-        execv(cmd[0].toStringz, cmd);
+        execv(cmd[0], cmd);
         throw new Exception("Failed to execute program : " ~ cmd[0]);
     }
     else version (Windows)
     {
+        import core.stdc.stdlib: exit;
+        
         wait(spawnProcess(cmd));
         exit(0);
     }
@@ -188,16 +187,16 @@ void execJava(string[] cmd)
 
 string determineUserConfigDir()
 {
-    string dir = env.get("CLJ_CONFIG");
+    string dir = environment.get("CLJ_CONFIG");
     if (!dir.empty)
         return dir;
 
-    dir = env.get("XDG_CONFIG_HOME");
+    dir = environment.get("XDG_CONFIG_HOME");
     if (!dir.empty)
         return buildPath(dir, "clojure");
     
-    version (Posix) dir = env.get("HOME");
-    version (Windows) dir = env.get("HOMEDRIVE") ~ env.get("HOMEPATH");
+    version (Posix) dir = environment.get("HOME");
+    version (Windows) dir = environment.get("HOMEDRIVE") ~ environment.get("HOMEPATH");
 
     if (!dir.empty)
         return buildPath(dir, ".clojure");
@@ -207,11 +206,11 @@ string determineUserConfigDir()
 
 string determineUserCacheDir(string configDir)
 {
-    string dir = env.get("CLJ_CAHCE");
+    string dir = environment.get("CLJ_CAHCE");
     if (!dir.empty)
         return dir;
 
-    dir = env.get("XDG_CACHE_HOME");
+    dir = environment.get("XDG_CACHE_HOME");
     if (!dir.empty)
         return buildPath(dir, "clojure");
     else
@@ -348,7 +347,6 @@ void generateManifest(in ref Vars vars)
     execJava(cmd);
 }
 
-// in 이면 에러다. 왜?
 void printTree(ref Vars vars)
 {
     string[] cmd = [vars.javaCmd,
