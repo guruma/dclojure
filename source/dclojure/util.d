@@ -69,6 +69,17 @@ void execJava(string[] cmd)
     }
 }
 
+void resolveTags(in ref Vars vars)
+{
+    string cmd = [vars.javaCmd,
+                  "-Xmx256m -classpath",
+                  vars.toolsCp,
+                  "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
+                 ].join(" ");
+
+    runJava(cmd);
+}
+
 string determineUserConfigDir()
 {
     string dir = environment.get("CLJ_CONFIG");
@@ -113,16 +124,6 @@ string determineUserCacheDir(string configDir)
         return buildPath(configDir, ".cpcache");
 }
 
-void resolveTags(in ref Vars vars)
-{
-    string cmd = [vars.javaCmd,
-                  "-Xmx256m -classpath",
-                  vars.toolsCp,
-                  "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
-                 ].join(" ");
-
-    runJava(cmd);
-}
 
 string makeChecksum(in ref Vars vars, in ref Opts opts)
 {
@@ -163,30 +164,6 @@ void printVerbose(in ref Vars vars)
     writeln("cache_dir    = ", vars.cacheDir);
     writeln("cp_file      = ", vars.cpFile);
     writeln();
-}
-
-void printDescribe(in ref Vars vars, in ref Opts opts)
-{
-    string[] pathVector;
-
-    foreach(path; vars.configPaths)
-    {
-        if (isFile(path))
-            pathVector ~= path;
-    }
-
-    writefln(`{:version "%s"`, vars.toolsVersion);
-    writefln(` :config-files [%(%s %)]`, pathVector);
-    writefln(` :install-dir "%s"`, vars.installDir);
-    writefln(` :config-dir "%s"`, vars.configDir);
-    writefln(` :cache-dir "%s"`, vars.cacheDir);
-    writeln( ` :force `, opts.force);
-    writeln( ` :repro `, opts.repro);
-    writefln(` :resolve-aliases "%s"`, opts.resolveAliases.join(" "));
-    writefln(` :classpath-aliases "%s"`, opts.classpathAliases.join(" "));
-    writefln(` :jvm-aliases "%s"`, opts.jvmAliases.join(" "));
-    writefln(` :main-aliases "%s"`, opts.mainAliases.join(" "));
-    writefln(` :all-aliases "%s"}`, opts.allAliases.join(" "));
 }
 
 string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
@@ -241,6 +218,30 @@ void generateManifest(in ref Vars vars)
                    ].filter!(str => !str.empty).array;
 
     execJava(cmd);
+}
+
+void printDescribe(in ref Vars vars, in ref Opts opts)
+{
+    string[] pathVector;
+
+    foreach(path; vars.configPaths)
+    {
+        if (isFile(path))
+            pathVector ~= path;
+    }
+
+    writefln(`{:version "%s"`, vars.toolsVersion);
+    writefln(` :config-files [%(%s %)]`, pathVector);
+    writefln(` :install-dir "%s"`, vars.installDir);
+    writefln(` :config-dir "%s"`, vars.configDir);
+    writefln(` :cache-dir "%s"`, vars.cacheDir);
+    writeln( ` :force `, opts.force);
+    writeln( ` :repro `, opts.repro);
+    writefln(` :resolve-aliases "%s"`, opts.resolveAliases.join(" "));
+    writefln(` :classpath-aliases "%s"`, opts.classpathAliases.join(" "));
+    writefln(` :jvm-aliases "%s"`, opts.jvmAliases.join(" "));
+    writefln(` :main-aliases "%s"`, opts.mainAliases.join(" "));
+    writefln(` :all-aliases "%s"}`, opts.allAliases.join(" "));
 }
 
 void printTree(ref Vars vars)
