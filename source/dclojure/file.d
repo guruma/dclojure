@@ -15,10 +15,10 @@ private bool _isExec(string name)
             return stat(namez, &st);
         }
 
-        struct_stat st = void;
+        struct_stat st;
         immutable result = trustedStat(name.toStringz(), st);
 
-        return (0 != (result & S_IEXEC));
+        return (0 != (st.st_mode & S_IEXEC));
         //return (result & S_IFMT) == S_IEXEC;
     }
     else version (Posix)
