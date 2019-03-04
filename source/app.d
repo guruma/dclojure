@@ -6,8 +6,123 @@ import std.stdio,
        dclojure.file,
        dclojure.util;
 
-import std.process: env = environment, executeShell;
+struct Opts
+{
+    string[] jvmOpts = [];
+    string[] resolveAliases = [];
+    string[] classpathAliases = [];
+    string[] jvmAliases = [];
+    string[] mainAliases = [];
+    string[] allAliases = [];
+    string depsData = "";
+    string forceCp = "";
+    bool printClasspath = false;
+    bool verbose = false;
+    bool describe = false;
+    bool force = false;
+    bool repro = false;
+    bool tree = false;
+    bool pom = false;
+    bool resolveTags = false;
+    bool help = false;
+}
 
+struct Vars
+{
+    string toolsVersion;
+    string toolsJar;
+    string[] configPaths;
+    string[] toolsArgs;
+    string[] args;
+    string installDir;
+    string toolsCp;
+    string depsData;
+    string configDir;
+    string userCacheDir;
+    string configStr;
+    string cacheDir;
+    string ck;
+    string libsFile;
+    string cpFile;
+    string jvmFile;
+    string mainFile;
+    string cp;
+    string[] jvmCacheOpts;
+    string[] mainCacheOpts;
+    string javaCmd;
+    bool stale = false;
+}
+
+Opts parseArgs(ref string[] args)
+{
+    Opts opts;
+
+    void shift()
+    {
+        if (args.length > 0)
+            popFront(args);
+    }
+
+    while (args.length > 0)
+    {
+        string arg = args[0];
+        shift();
+ 
+        if (startsWith(arg, "-J"))
+            opts.jvmOpts ~= arg[2 .. $];
+        else if (startsWith(arg, "-R"))
+            opts.resolveAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-C"))
+            opts.classpathAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-O"))
+            opts.jvmAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-M"))
+            opts.mainAliases ~= arg[2 .. $];
+        else if (startsWith(arg, "-A"))
+            opts.allAliases ~= arg[2 .. $];
+        else if (arg == "-Sdeps")
+        {
+            opts.depsData = args[0];
+            shift();
+        }
+        else if (arg == "-Scp")
+        {
+            opts.forceCp = args[0];
+            shift();
+        }
+        else if (arg == "-Spath")
+            opts.printClasspath = true;
+        else if (arg == "-Sverbose")
+            opts.verbose= true;
+        else if (arg == "-Sdescribe")
+            opts.describe = true;
+        else if (arg == "-Sforce")
+            opts.force = true;
+        else if (arg == "-Srepro")
+            opts.repro = true;
+        else if (arg == "-Stree")
+            opts.tree = true;
+        else if (arg == "-Spom")
+            opts.pom = true;
+        else if (arg == "-Sresolve-tags")
+            opts.resolveTags = true;
+        else if (startsWith(arg, "-S"))
+            writeln("Invalid option: ", arg);
+        else if (arg == "-h" || arg == "--help" || arg == "-?")
+        {
+            if (!opts.mainAliases.empty || !opts.allAliases.empty)
+                break;
+            else
+                opts.help = true;
+        } 
+        else
+        {
+            args = [arg] ~ args;
+            break;
+        }
+    }
+    return opts;
+}
 
 void main(string[] args)
 {
