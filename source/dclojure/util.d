@@ -7,7 +7,7 @@ import std.stdio,
        dclojure.file,
        std.array;
 
-import std.process : env = environment, executeShell, execv;
+import std.process : env = environment, executeShell, execv, spawnProcess, wait;
 
 
 struct Opts
