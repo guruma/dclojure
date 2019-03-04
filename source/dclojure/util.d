@@ -69,6 +69,16 @@ void execJava(string[] cmd)
     }
 }
 
+string getInstallDir(Vars vars)
+{
+    version (Windows)
+        return buildPath(environment.get("LocalAppData"), "lib", "clojure");
+    version (linux) 
+        return "/usr/local/lib/clojure";
+    version (OSX) 
+        return "/usr/local/Cellar/clojure/" ~ vars.toolsVersion;
+}
+
 void resolveTags(in ref Vars vars)
 {
     string cmd = [vars.javaCmd,
