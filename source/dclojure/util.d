@@ -177,11 +177,11 @@ void execJava(string[] cmd)
     version(Posix)
     {
         execv(cmd[0].toStringz, cmd);
+        throw new Exception("Failed to execute program : " ~ cmd[0]);
     }
     else version (Windows)
     {
-        writeln("cmd = ", cmd);
-        spawnProcess(cmd, stdin, stdout, stderr);
+        wait(spawnProcess(cmd));
         exit(0);
     }
 }
