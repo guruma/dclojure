@@ -2,12 +2,13 @@ module dclojure.util;
 
 import std.stdio, 
        std.string, 
-       std.path, 
+       std.path,
        std.algorithm,
        dclojure.file,
        std.array;
 
 import std.process : env = environment, executeShell, execv, spawnProcess, wait;
+import core.stdc.stdlib: exit;
 
 
 struct Opts
@@ -128,7 +129,7 @@ Opts parseArgs(ref string[] args)
     return opts;
 }
 
-string findCmdPath(string cmd)
+string findExecutable(string cmd)
 {
     string envPath = env.get("PATH");
     
@@ -148,7 +149,7 @@ string findJava()
     version (Posix) string javaCmd = "java";
     version (Windows) string javaCmd = "java.exe";
     
-    string javaPath = findCmdPath(javaCmd);
+    string javaPath = findExecutable(javaCmd);
 
     if (!javaPath.empty)
         return javaPath;
@@ -181,6 +182,7 @@ void execJava(string[] cmd)
     {
         writeln("cmd = ", cmd);
         spawnProcess(cmd, stdin, stdout, stderr);
+        exit(0);
     }
 }
 
