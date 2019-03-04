@@ -136,7 +136,7 @@ void main(string[] args)
     vars.javaCmd = findJava();
  
     if (opts.help)
-        writeln(helpMessage);
+        printHelp();
 
     version (Windows)
         vars.installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");

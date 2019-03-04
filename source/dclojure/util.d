@@ -124,7 +124,6 @@ string determineUserCacheDir(string configDir)
         return buildPath(configDir, ".cpcache");
 }
 
-
 string makeChecksum(in ref Vars vars, in ref Opts opts)
 {
     string val = [opts.resolveAliases.join(),
@@ -314,6 +313,10 @@ For more info, see:
  https://clojure.org/reference/repl_and_main
 END";
 
+void printHelp()
+{
+    writeln(helpMessage);
+}
 
 // for internal debugging
 void printStruct(S)(S s)
