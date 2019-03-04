@@ -1,6 +1,7 @@
 import std.stdio,
        std.string,
        std.path,
+       std.process,
        std.array,
        core.stdc.stdlib,
        dclojure.file,
@@ -139,7 +140,7 @@ void main(string[] args)
         printHelp();
 
     version (Windows)
-        vars.installDir = buildPath(env.get("LocalAppData"), "lib", "clojure");
+        vars.installDir = buildPath(environment.get("LocalAppData"), "lib", "clojure");
     version (linux) 
         vars.installDir = "/usr/local/lib/clojure";
     version (OSX) 
