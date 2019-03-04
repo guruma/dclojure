@@ -173,7 +173,15 @@ void runJava(string cmd)
 
 void execJava(string[] cmd)
 {
-    execv(cmd[0], cmd);
+    version(Posix)
+    {
+        execv(cmd[0].toStringz, cmd);
+    }
+    else version (Windows)
+    {
+        writeln("cmd = ", cmd);
+        spawnProcess(cmd, stdin, stdout, stderr);
+    }
 }
 
 string determineUserConfigDir()
@@ -433,5 +441,4 @@ void printStruct(S)(S s)
     {
         writefln("%s = %s", fields[index], value);
     }
-    writeln();
-}
+ }
