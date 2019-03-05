@@ -325,7 +325,7 @@ END";
 
 void printHelp()
 {
-    writeln(helpMessage);
+    write(helpMessage);
 }
 
 // for internal debugging
