@@ -50,7 +50,12 @@ string findJava()
 
 void runJava(string[] cmd)
 {
-    execute(cmd);
+    auto result = execute(cmd);
+    if (result.status != 0)
+    {
+         writeln(result.output);
+         exit(1);
+    }
 }
 
 void execJava(string[] cmd)
