@@ -48,9 +48,9 @@ string findJava()
     return null;
 }
 
-void runJava(string cmd)
+void runJava(string[] cmd)
 {
-    executeShell(cmd);
+    execute(cmd);
 }
 
 void execJava(string[] cmd)
@@ -85,11 +85,11 @@ string getInstallDir(Vars vars)
 
 void resolveTags(in ref Vars vars)
 {
-    string cmd = [vars.javaCmd,
-                  "-Xmx256m -classpath",
-                  vars.toolsCp,
-                  "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
-                 ].join(" ");
+    string[] cmd = [vars.javaCmd,
+                    "-Xmx256m -classpath",
+                    vars.toolsCp,
+                    "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
+                   ];
 
     runJava(cmd);
 }
@@ -204,17 +204,17 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 
 void makeClasspath(in ref Vars vars)
 {
-    string cmd = [vars.javaCmd, 
-                  "-Xmx256m",
-                  "-classpath", vars.toolsCp, 
-                  "clojure.main -m clojure.tools.deps.alpha.script.make-classpath",
-                  "--config-files", vars.configStr,
-                  "--libs-file", vars.libsFile,
-                  "--cp-file", vars.cpFile,
-                  "--jvm-file", vars.jvmFile,
-                  "--main-file", vars.mainFile,
-                  vars.toolsArgs.join()
-                 ].join(" ");
+    string cmd[] = [vars.javaCmd,
+                    "-Xmx256m",
+                    "-classpath", vars.toolsCp,
+                    "clojure.main -m clojure.tools.deps.alpha.script.make-classpath",
+                    "--config-files", vars.configStr,
+                    "--libs-file", vars.libsFile,
+                    "--cp-file", vars.cpFile,
+                    "--jvm-file", vars.jvmFile,
+                    "--main-file", vars.mainFile,
+                    vars.toolsArgs.join()
+                   ];
 
     runJava(cmd);
 }
