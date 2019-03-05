@@ -204,7 +204,7 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 
 void makeClasspath(in ref Vars vars)
 {
-    string cmd[] = [vars.javaCmd,
+    string[] cmd = [vars.javaCmd,
                     "-Xmx256m",
                     "-classpath", vars.toolsCp,
                     "clojure.main -m clojure.tools.deps.alpha.script.make-classpath",
