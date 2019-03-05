@@ -135,8 +135,10 @@ void main(string[] args)
 
     vars.javaCmd = findJava();
  
-    if (opts.help)
+    if (opts.help) {
         printHelp();
+        exit(0);
+    }
 
     vars.installDir = getInstallDir(vars);    
     vars.toolsCp = buildPath(vars.installDir, "libexec", vars.toolsJar);
