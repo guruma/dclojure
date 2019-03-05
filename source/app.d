@@ -186,6 +186,8 @@ void main(string[] args)
     vars.mainFile = buildPath(vars.cacheDir, vars.ck ~ ".main");
 
 
+    writeln("verbose = ", opts.verbose);
+
     if (opts.verbose)
         printVerbose(vars);
 
