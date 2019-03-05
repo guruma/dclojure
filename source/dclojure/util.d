@@ -176,6 +176,7 @@ void printVerbose(in ref Vars vars)
     writeln("config_paths = ", vars.configPaths.join(" "));
     writeln("cache_dir    = ", vars.cacheDir);
     writeln("cp_file      = ", vars.cpFile);
+    writeln();
 }
 
 string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)

@@ -185,9 +185,6 @@ void main(string[] args)
     vars.jvmFile  = buildPath(vars.cacheDir, vars.ck ~ ".jvm");
     vars.mainFile = buildPath(vars.cacheDir, vars.ck ~ ".main");
 
-
-    writeln("verbose = ", opts.verbose);
-
     if (opts.verbose)
         printVerbose(vars);
 
