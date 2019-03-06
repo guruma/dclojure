@@ -53,8 +53,10 @@ void runJava(string[] cmd)
     auto result = execute(cmd);
     if (result.status != 0)
     {
-         writeln(result.output);
-         exit(1);
+        import core.stdc.stdlib: exit;
+         
+        writeln(result.output);
+        exit(1);
     }
 }
 
