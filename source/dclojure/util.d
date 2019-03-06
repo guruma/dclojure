@@ -62,23 +62,12 @@ void runJava(string[] cmd)
 
 void runJava1(string[] cmd)
 {
-    version(Posix)
-    {
-        auto result = execute(cmd);
-        
-        if (result.status != 0)
-        {
-            import core.stdc.stdlib: exit;
-         
-            writeln(result.output);
-            exit(1);
-        }
-    }
-    else version(Windows)
-    {
-        string cmd0 = `"` ~ cmd[0] ~ `" `;
-        executeShell(cmd0 ~ cmd[1..$].join(" "));
-    }
+    string cmdStr;
+
+    version(Posix) cmdStr = cmd.join(" ");
+    version(Windows) cmdStr = `"` ~ cmd[0] ~ `" ` ~ cmd[1..$].join(" ");
+
+    executeShell(cmdStr);
 }
 
 void execJava(string[] cmd)
@@ -117,7 +106,7 @@ void resolveTags(in ref Vars vars)
                     "-Xmx256m -classpath",
                     vars.toolsCp,
                     "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
-                   ];
+                   ].filter!(str => !str.empty).array;
 
     runJava(cmd);
 }
@@ -242,7 +231,7 @@ void makeClasspath(in ref Vars vars)
                     "--jvm-file", vars.jvmFile,
                     "--main-file", vars.mainFile,
                     vars.toolsArgs.join()
-                   ];
+                   ].filter!(str => !str.empty).array;
 
     runJava(cmd);
 }
