@@ -38,7 +38,7 @@ $ sudo ./dclojure-linux-install-1.10.0.414.1.sh
 ## How to use
 
 The usage is exactly the same as The link:https://clojure.org/guides/deps_and_cli[official
-releases] of clojure and clj.
+releases] of `clojure` and `clj` CLI tools.
 
 
 [listing]
