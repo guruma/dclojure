@@ -124,7 +124,7 @@ Opts parseArgs(ref string[] args)
     return opts;
 }
 
-void main(string[] args)
+void main0(string[] args)
 {
     Vars vars;
     vars.toolsVersion = "1.10.0.414";
@@ -244,33 +244,9 @@ void main(string[] args)
 }
 
 
-void test2()
+void main(string[] args)
 {
-    auto f = "dclojure";
+    import dclojure.windows;
 
-    writefln("exists   : %d", f.exists);
-    writefln("isDir    : %d", f.isDir);
-    writefln("isFile   : %d", f.isFile);
-    writefln("isExec   : %d", f.isExec);
+    install();
 }
-
-void testResolveTags()
-{
-    Vars vars;
-    resolveTags(vars);
-}
-
-void testMakeChecksum()
-{
-    string[] a = ["a", "b", "c"];
-    string[] b = ["1", "2", "3"];
-    string[] paths = ["dclojur", "dub.json"];
-
-    Opts opts;
-    Vars vars;
-
-    string ck = makeChecksum(vars, opts);
-
-    writeln(ck);
-}
-
