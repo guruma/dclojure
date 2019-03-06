@@ -1,7 +1,7 @@
 # dclojure
 :sectnums:
 
-A Clojure CLI fork in D for Linux, Windows and OSX.
+A Clojure CLI fork written in D for Linux, Windows and OSX.
 
 * THIS IS NOT THE OFFICIAL installer for clojure and cli tools.
 
