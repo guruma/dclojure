@@ -3,7 +3,7 @@
 
 A Clojure CLI fork written in D for Linux, Windows and OSX.
 
-* THIS IS NOT THE OFFICIAL installer for clojure and cli tools.
+* THIS IS NOT THE OFFICIAL installer for Clojure CLI tools.
 
 
 ## How to install
