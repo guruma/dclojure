@@ -348,4 +348,5 @@ void printStruct(S)(S s)
     {
         writefln("%s = %s", fields[index], value);
     }
+    writeln();
  }
