@@ -124,7 +124,7 @@ Opts parseArgs(ref string[] args)
     return opts;
 }
 
-void main0(string[] args)
+void main(string[] args)
 {
     Vars vars;
     vars.toolsVersion = "1.10.0.414";
@@ -244,9 +244,9 @@ void main0(string[] args)
 }
 
 
-void main(string[] args)
+void main1(string[] args)
 {
     import dclojure.windows;
 
-    install();
+    version (Windows) install();
 }
