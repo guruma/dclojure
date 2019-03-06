@@ -19,7 +19,7 @@ A Clojure CLI fork in D for Linux, Windows and OSX.
 $ tar xvzf dclojure-linux-1.10.0.414.1.tar.gz 
 ----
 
-* Run `sudo ./dclojure-linux-install-1.10.0.414.1.sh` 
+* Run the following `dclojure-linux` installer.
 +
 [listing]
 ----
