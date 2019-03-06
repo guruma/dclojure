@@ -35,4 +35,21 @@ $ sudo ./dclojure-linux-install-1.10.0.414.1.sh
 ### OSX
 
 
+## How to use
+
+The usage is exactly the same as The link:https://clojure.org/guides/deps_and_cli[official
+releases] of clojure and clj.
+
+
+[listing]
+----
+$ clojure
+Clojure 1.10.0
+user=> 
+
+$ clj
+Clojure 1.10.0
+user=> 
+----
+
 
