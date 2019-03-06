@@ -50,24 +50,7 @@ string findJava()
 
 void runJava(string[] cmd)
 {
-    auto result = execute(cmd);
-    if (result.status != 0)
-    {
-        import core.stdc.stdlib: exit;
-         
-        writeln(result.output);
-        exit(1);
-    }
-}
-
-void runJava1(string[] cmd)
-{
-    string cmdStr;
-
-    version(Posix) cmdStr = cmd.join(" ");
-    version(Windows) cmdStr = `"` ~ cmd[0] ~ `" ` ~ cmd[1..$].join(" ");
-
-    executeShell(cmdStr);
+    execute(cmd);
 }
 
 void execJava(string[] cmd)
@@ -105,7 +88,9 @@ void resolveTags(in ref Vars vars)
     string[] cmd = [vars.javaCmd,
                     "-Xmx256m -classpath",
                     vars.toolsCp,
-                    "clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn"
+                    "clojure.main",
+                    "-m", "clojure.tools.deps.alpha.script.resolve-tags",
+                    "--deps-file=deps.edn"
                    ].filter!(str => !str.empty).array;
 
     runJava(cmd);
@@ -224,7 +209,7 @@ void makeClasspath(in ref Vars vars)
     string[] cmd = [vars.javaCmd,
                     "-Xmx256m",
                     "-classpath", vars.toolsCp,
-                    "clojure.main -m clojure.tools.deps.alpha.script.make-classpath",
+                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.make-classpath",
                     "--config-files", vars.configStr,
                     "--libs-file", vars.libsFile,
                     "--cp-file", vars.cpFile,
