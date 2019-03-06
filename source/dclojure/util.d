@@ -48,7 +48,7 @@ string findJava()
     return null;
 }
 
-void runJava(string[] cmd)
+void runJava0(string[] cmd)
 {
     auto result = execute(cmd);
     if (result.status != 0)
@@ -58,6 +58,13 @@ void runJava(string[] cmd)
         writeln(result.output);
         exit(1);
     }
+}
+
+void runJava(string[] cmd)
+{
+    stdout.flush();
+
+    wait(spawnProcess(cmd));
 }
 
 void execJava(string[] cmd)
