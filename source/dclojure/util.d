@@ -48,7 +48,7 @@ string findJava()
     return null;
 }
 
-void runJava0(string[] cmd)
+void runJava(string[] cmd)
 {
     auto result = execute(cmd);
     if (result.status != 0)
@@ -60,11 +60,25 @@ void runJava0(string[] cmd)
     }
 }
 
-void runJava(string[] cmd)
+void runJava1(string[] cmd)
 {
-    stdout.flush();
-
-    wait(spawnProcess(cmd));
+    version(Posix)
+    {
+        auto result = execute(cmd);
+        
+        if (result.status != 0)
+        {
+            import core.stdc.stdlib: exit;
+         
+            writeln(result.output);
+            exit(1);
+        }
+    }
+    else version(Windows)
+    {
+        string cmd0 = `"` ~ cmd[0] ~ `" `;
+        executeShell(cmd0 ~ cmd[1..$].join(" "));
+    }
 }
 
 void execJava(string[] cmd)
