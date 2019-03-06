@@ -1,0 +1,37 @@
+# dclojure
+:sectnums:
+
+A Clojure CLI fork in D for Linux, Windows and OSX.
+
+* THIS IS NOT THE OFFICIAL installer for clojure and cli tools.
+
+
+## How to install
+
+### in Linux
+
+* Download link:dist/linux/dclojure-linux-1.10.0.414.1.tar.gz[] file.
+
+* Unzip the downloaded zip file.
++
+[listing]
+----
+$ tar xvzf dclojure-linux-1.10.0.414.1.tar.gz 
+----
+
+* Run `sudo ./dclojure-linux-install-1.10.0.414.1.sh` 
+[listing]
+----
+$ cd dclojure-linux-1.10.0.414.1
+
+$ sudo ./dclojure-linux-install-1.10.0.414.1.sh 
+----
+
+
+
+
+
+
+----
+
+
