@@ -7,39 +7,85 @@ A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 * This is written in D and compiled to the binary executable as fast as C++.
 
-* This has the advantage of maintaining one D source on any platform including Linux, Mac and Windows.
+* This has the advantage of maintaining one D source on any platform including Linux, Mac
+  and Windows.
 
 
 ## How to install
 
 ### Linux
 
-Ensure that the following dependencies are installed: `bash`, `rlwrap`, and `Java`.
-
-//+
-
-* Click the following link and then press `Download` button.
-**  link:dist/linux/dclojure-linux-1.10.0.414.1.tar.gz[].
-
-* Unzip the downloaded zip file.
+. Refer to
+  link:https://clojure.org/guides/getting_started#_installation_on_linux[Installation on
+  linux] and follow the instruction to install Clojure CLI tools.
++
+We will reproduce the procedure here for your convenience.
 +
 [listing]
 ----
-$ tar xvzf dclojure-linux-1.10.0.414.1.tar.gz 
+curl -O https://download.clojure.org/install/linux-install-1.10.0.414.sh
+chmod +x linux-install-1.10.0.414.sh
+sudo ./linux-install-1.10.0.414.sh
 ----
 
-* Use the `dclojure-linux-install` shell script to run the install, which will create
-`/usr/local/bin/clj`, `/usr/local/bin/clojure`, and `/usr/local/lib/clojure`:
+. Identify where the `clojure` bash shell script is installed.
 +
 [listing]
 ----
-$ cd dclojure-linux-1.10.0.414.1
-$ chmod +x dclojure-linux-install-1.10.0.414.1.sh
-$ sudo ./dclojure-linux-install-1.10.0.414.1.sh 
+$ which clojure
+/usr/local/bin/clojure
 ----
 
-### OSX
+. Click the following link and then press `Download` button to download the precompiled
+  `clojure` executable for Linux.
+** link:dist/linux/clojure[]
 
+. Replace the above `clojure` bash shell script with the downloaded `clojure` executable as
+follows.
+
+[listing]
+----
+$ chmod +x clojure
+
+$ sudo mv -f clojure /usr/local/bin/clojure
+----
+
+
+### Mac OSX
+
+. Refer to
+  link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation_on_Mac via brew] and follow the instruction to install Clojure CLI tools.
++
+We will reproduce the procedure here for your convenience.
++
+[listing]
+----
+$ brew install clojure
+
+$ brew upgrade clojure
+----
+
+. Identify where the `clojure` bash shell script is installed.
++
+[listing]
+----
+$ which clojure
+/usr/local/bin/clojure
+----
+
+. Click the following link and then press `Download` button to download the precompiled
+  `clojure` executable for Linux.
+** link:dist/mac/clojure[]
+
+. Replace the above `clojure` bash shell script with the downloaded `clojure` executable as
+follows.
+
+[listing]
+----
+$ chmod +x clojure
+
+$ sudo mv -f clojure /usr/local/bin/clojure
+----
 
 ### Windows
 
