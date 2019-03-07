@@ -153,3 +153,7 @@ Clojure 1.10.0
 user=> 
 ----
 
+
+## License
+
+The license is the same as the offical Clojure CLI tools.
