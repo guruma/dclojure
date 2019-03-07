@@ -15,9 +15,10 @@ A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 ### Linux
 
-. Refer to
+. Visit
   link:https://clojure.org/guides/getting_started#_installation_on_linux[Installation on
-  linux] and follow the instruction to install Clojure CLI tools for Linux.
+  linux] on the offical site and follow the instruction to install Clojure CLI tools for
+  Linux.
 +
 The instruction is reproduced here for your convenience.
 +
@@ -28,7 +29,7 @@ $ chmod +x linux-install-1.10.0.414.sh
 $ sudo ./linux-install-1.10.0.414.sh
 ----
 
-. Identify where the `clojure` bash shell script is installed.
+. Identify where the installed `clojure` bash shell script is.
 +
 [listing]
 ----
@@ -37,11 +38,11 @@ $ which clojure
 ----
 
 . Click the following link and then press `Download` button to download our precompiled
-  `clojure` executable for Linux.
+  `clojure` binary executable for Linux.
 ** link:dist/linux/clojure[]
 
-. Replace the above `clojure` bash shell script with our `clojure` binary executable as
-follows.
+. Replace the `clojure` bash shell script from the official site with our precompiled
+  `clojure` binary executable as follows.
 +
 [listing]
 ----
@@ -52,9 +53,10 @@ $ sudo mv -f clojure /usr/local/bin/clojure
 
 ### Mac OSX
 
-. Refer to
+. Visit
   link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation
-  on Mac via brew] and follow the instruction to install Clojure CLI tools for Mac OSX.
+  on Mac via brew] on the official site and follow the instruction to install Clojure CLI
+  tools for Mac OSX.
 +
 The instruction is reproduced here for your convenience.
 +
@@ -64,7 +66,7 @@ $ brew install clojure
 $ brew upgrade clojure
 ----
 
-. Identify where the `clojure` bash shell script is installed.
+. Identify where the installed `clojure` bash shell script is.
 +
 [listing]
 ----
@@ -76,8 +78,8 @@ $ which clojure
   `clojure` binary executable for Mac OSX.
 ** link:dist/mac/clojure[]
 
-. Replace the above `clojure` bash shell script with our `clojure` binary executable as
-  follows.
+. Replace the `clojure` bash shell script from the official site with our precompiled
+  `clojure` binary executable as follows.
 +
 [listing]
 ----
