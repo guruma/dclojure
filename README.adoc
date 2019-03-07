@@ -17,9 +17,9 @@ A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 . Refer to
   link:https://clojure.org/guides/getting_started#_installation_on_linux[Installation on
-  linux] and follow the instruction to install Clojure CLI tools.
+  linux] and follow the instruction to install Clojure CLI tools for Linux.
 +
-We will reproduce the procedure here for your convenience.
+The instruction is reproduced here for your convenience.
 +
 [listing]
 ----
@@ -36,13 +36,13 @@ $ which clojure
 /usr/local/bin/clojure
 ----
 
-. Click the following link and then press `Download` button to download the precompiled
+. Click the following link and then press `Download` button to download our precompiled
   `clojure` executable for Linux.
 ** link:dist/linux/clojure[]
 
-. Replace the above `clojure` bash shell script with the downloaded `clojure` executable as
+. Replace the above `clojure` bash shell script with our `clojure` binary executable as
 follows.
-
++
 [listing]
 ----
 $ chmod +x clojure
@@ -54,9 +54,10 @@ $ sudo mv -f clojure /usr/local/bin/clojure
 ### Mac OSX
 
 . Refer to
-  link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation_on_Mac via brew] and follow the instruction to install Clojure CLI tools.
+  link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation_on_Mac
+  via brew] and follow the instruction to install Clojure CLI tools for Mac OSX.
 +
-We will reproduce the procedure here for your convenience.
+The instruction is reproduced here for your convenience.
 +
 [listing]
 ----
@@ -70,21 +71,21 @@ $ brew upgrade clojure
 [listing]
 ----
 $ which clojure
-/usr/local/bin/clojure
+/usr/local/Cellar/clojure
 ----
 
-. Click the following link and then press `Download` button to download the precompiled
-  `clojure` executable for Linux.
+. Click the following link and then press `Download` button to download our precompiled
+  `clojure` binary executable for Mac OSX.
 ** link:dist/mac/clojure[]
 
-. Replace the above `clojure` bash shell script with the downloaded `clojure` executable as
-follows.
-
+. Replace the above `clojure` bash shell script with our `clojure` binary executable as
+  follows.
++
 [listing]
 ----
 $ chmod +x clojure
 
-$ sudo mv -f clojure /usr/local/bin/clojure
+$ sudo mv -f clojure /usr/local/Cellar/clojure
 ----
 
 ### Windows
