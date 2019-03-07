@@ -17,8 +17,7 @@ A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 . Visit
   link:https://clojure.org/guides/getting_started#_installation_on_linux[Installation on
-  Linux] on the offical site and follow the instruction to install Clojure CLI tools for
-  Linux.
+  Linux] and follow the instruction to install the offical Clojure CLI tools for Linux.
 +
 The instruction is reproduced here for your convenience.
 +
@@ -55,8 +54,8 @@ $ sudo mv -f clojure /usr/local/bin/clojure
 
 . Visit
   link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation
-  on Mac via brew] on the official site and follow the instruction to install Clojure CLI
-  tools for Mac OSX.
+  on Mac via brew] and follow the instruction to install the offical Clojure CLI tools for
+  Mac OSX.
 +
 The instruction is reproduced here for your convenience.
 +
