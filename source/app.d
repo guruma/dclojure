@@ -242,11 +242,3 @@ void main(string[] args)
         runClojure(vars, opts);
     }
 }
-
-
-void main1(string[] args)
-{
-    import dclojure.windows;
-
-    version (Windows) install();
-}
