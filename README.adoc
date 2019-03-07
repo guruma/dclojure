@@ -53,8 +53,8 @@ $ sudo mv -f clojure /usr/local/bin/clojure
 ### Mac OSX
 
 . Refer to
-  link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation_on_Mac
-  via brew] and follow the instruction to install Clojure CLI tools for Mac OSX.
+  link:https://clojure.org/guides/getting_started#_installation_on_mac_via_brew[Installation
+  on Mac via brew] and follow the instruction to install Clojure CLI tools for Mac OSX.
 +
 The instruction is reproduced here for your convenience.
 +
