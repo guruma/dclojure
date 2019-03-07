@@ -17,7 +17,7 @@ A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 . Visit
   link:https://clojure.org/guides/getting_started#_installation_on_linux[Installation on
-  linux] on the offical site and follow the instruction to install Clojure CLI tools for
+  Linux] on the offical site and follow the instruction to install Clojure CLI tools for
   Linux.
 +
 The instruction is reproduced here for your convenience.
