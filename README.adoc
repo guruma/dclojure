@@ -98,10 +98,12 @@ main-opt:
 For more info, see:
  https://clojure.org/guides/deps_and_cli
  https://clojure.org/reference/repl_and_main
+----
 
+[listing]
+----
 $ clj
 Clojure 1.10.0
 user=> 
 ----
-
 
