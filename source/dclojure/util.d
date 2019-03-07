@@ -286,11 +286,13 @@ void runClojure(in ref Vars vars, in ref Opts opts)
 }
 
 string helpMessage = q"END
-Usage: dclojure [dep-opt*] [init-opt*] [main-opt] [arg*]
-       dclj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+The Clojure CLI tools written in D. version: 1.10.0.414.1
 
-dclojure is a runner for Clojure written in the D language.
-dclj is a wrapper for interactive repl use. 
+Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
+       clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+
+`clojure` is a runner for Clojure written in the D language.
+`clj` is a wrapper for interactive repl use. 
 These programs ultimately construct and invoke a command-line of the form:
 
 java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
