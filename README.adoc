@@ -23,9 +23,9 @@ The instruction is reproduced here for your convenience.
 +
 [listing]
 ----
-curl -O https://download.clojure.org/install/linux-install-1.10.0.414.sh
-chmod +x linux-install-1.10.0.414.sh
-sudo ./linux-install-1.10.0.414.sh
+$ curl -O https://download.clojure.org/install/linux-install-1.10.0.414.sh
+$ chmod +x linux-install-1.10.0.414.sh
+$ sudo ./linux-install-1.10.0.414.sh
 ----
 
 . Identify where the `clojure` bash shell script is installed.
@@ -46,7 +46,6 @@ follows.
 [listing]
 ----
 $ chmod +x clojure
-
 $ sudo mv -f clojure /usr/local/bin/clojure
 ----
 
@@ -62,7 +61,6 @@ The instruction is reproduced here for your convenience.
 [listing]
 ----
 $ brew install clojure
-
 $ brew upgrade clojure
 ----
 
@@ -84,9 +82,9 @@ $ which clojure
 [listing]
 ----
 $ chmod +x clojure
-
 $ sudo mv -f clojure /usr/local/Cellar/clojure
 ----
+
 
 ### Windows
 
