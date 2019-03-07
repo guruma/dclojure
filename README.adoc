@@ -153,6 +153,28 @@ user=>
 ----
 
 
+## How to build
+
+* Install the D compiler that you want from link:https://dlang.org/download.html[].
+
+* Install the DUB build tool and package manager from
+  link:https://dub.pm/getting_started[].
+
+* Clone this repository, compile the source and run the executable as follows.
++
+[listing]
+----
+$ git clone git@github.com:guruma/dclojure.git
+$ cd dclojure
+$ dub build
+$ dub run
+----
+
+
+
+
+
+
 ## License
 
 The license is the same as the offical Clojure CLI tools.
