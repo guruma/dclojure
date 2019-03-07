@@ -1,14 +1,13 @@
 # dclojure
 :sectnums:
 
-A Clojure CLI fork written in D for Linux, Windows and OSX.
+A Clojure CLI fork written in D for Linux, Mac and Windows.
 
 * THIS IS NOT THE OFFICIAL installer for Clojure CLI tools.
 
 * This is written in D and compiled to the binary executable as fast as C++.
 
-* This has the advantage of maintaining one D source on any platform including Linux,
-  Windows and OSX.
+* This has the advantage of maintaining one D source on any platform including Linux, Mac and Windows.
 
 
 ## How to install
@@ -39,11 +38,11 @@ $ chmod +x dclojure-linux-install-1.10.0.414.1.sh
 $ sudo ./dclojure-linux-install-1.10.0.414.1.sh 
 ----
 
+### OSX
+
 
 ### Windows
 
-
-### OSX
 
 
 ## How to use
