@@ -126,11 +126,13 @@ Opts parseArgs(ref string[] args)
 
 void main(string[] args)
 {
+    string toolsVersion = import("version");
+
     Vars vars;
-    vars.toolsVersion = "1.10.0.414";
+    vars.toolsVersion = toolsVersion;        
     vars.toolsJar = "clojure-tools-" ~ vars.toolsVersion ~ ".jar";
     vars.args = args[1 .. $];
-
+    
     Opts opts = parseArgs(vars.args);
 
     vars.javaCmd = findJava();
