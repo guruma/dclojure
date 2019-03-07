@@ -5,5 +5,6 @@
 	"copyright": "Copyright © 2019, gngng",
 	"description": "A minimal D application.",
 	"license": "proprietary",
-	"name": "install"
+	"name": "install",
+	"dflags": ["-J=..\\..\\"]
 }
