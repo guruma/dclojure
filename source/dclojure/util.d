@@ -10,6 +10,7 @@ import std.stdio,
 
 import app: Opts, Vars;
 
+
 string findExecutable(string cmd)
 {
     string envPath = environment.get("PATH");
@@ -48,12 +49,12 @@ string findJava()
     return null;
 }
 
-void runJava(string[] cmd)
+void runJava(const string[] cmd)
 {
     execute(cmd);
 }
 
-void execJava(string[] cmd)
+void execJava(const string[] cmd)
 {
     version(Posix)
     {
@@ -85,13 +86,13 @@ string getInstallDir(Vars vars)
 
 void resolveTags(in ref Vars vars)
 {
-    string[] cmd = [vars.javaCmd,
-                    "-Xmx256m -classpath",
-                    vars.toolsCp,
-                    "clojure.main",
-                    "-m", "clojure.tools.deps.alpha.script.resolve-tags",
-                    "--deps-file=deps.edn"
-                   ].filter!(str => !str.empty).array;
+    auto cmd = [vars.javaCmd,
+                "-Xmx256m",
+                " -classpath", vars.toolsCp,
+                "clojure.main",
+                "-m", "clojure.tools.deps.alpha.script.resolve-tags",
+                "--deps-file=deps.edn"
+               ].filter!(str => !str.empty).array;
 
     runJava(cmd);
 }
@@ -206,31 +207,29 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 
 void makeClasspath(in ref Vars vars)
 {
-    string[] cmd = [vars.javaCmd,
-                    "-Xmx256m",
-                    "-classpath", vars.toolsCp,
-                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.make-classpath",
-                    "--config-files", vars.configStr,
-                    "--libs-file", vars.libsFile,
-                    "--cp-file", vars.cpFile,
-                    "--jvm-file", vars.jvmFile,
-                    "--main-file", vars.mainFile,
-                    vars.toolsArgs.join()
-                   ].filter!(str => !str.empty).array;
+    auto cmd = [vars.javaCmd,
+                "-Xmx256m",
+                "-classpath", vars.toolsCp,
+                "clojure.main", "-m", "clojure.tools.deps.alpha.script.make-classpath",
+                "--config-files", vars.configStr,
+                "--libs-file", vars.libsFile,
+                "--cp-file", vars.cpFile,
+                "--jvm-file", vars.jvmFile,
+                "--main-file", vars.mainFile] ~ vars.toolsArgs
+               .filter!(str => !str.empty).array;
 
     runJava(cmd);
 }
 
 void generateManifest(in ref Vars vars)
 {
-    string[] cmd = [vars.javaCmd,
-                    "-Xmx256m",
-                    "-classpath", vars.toolsCp,
-                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
-                    "--config-files", vars.configStr,
-                    "--gen=pom",
-                    vars.toolsArgs.join()
-                   ].filter!(str => !str.empty).array;
+    auto cmd = [vars.javaCmd,
+                "-Xmx256m",
+                "-classpath", vars.toolsCp,
+                "clojure.main", "-m", "clojure.tools.deps.alpha.script.generate-manifest",
+                "--config-files", vars.configStr,
+                "--gen=pom"] ~ vars.toolsArgs
+               .filter!(str => !str.empty).array;
 
     execJava(cmd);
 }
@@ -261,26 +260,28 @@ void printDescribe(in ref Vars vars, in ref Opts opts)
 
 void printTree(ref Vars vars)
 {
-    string[] cmd = [vars.javaCmd,
-                    "-Xmx256m",
-                    "-classpath", vars.toolsCp,
-                    "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
-                    "--libs-file", vars.libsFile
-                   ].filter!(str => !str.empty).array;
+    auto cmd = [vars.javaCmd,
+                "-Xmx256m",
+                "-classpath", vars.toolsCp,
+                "clojure.main", "-m", "clojure.tools.deps.alpha.script.print-tree",
+                "--libs-file", vars.libsFile
+               ].filter!(str => !str.empty).array;
 
     execJava(cmd);
 }
 
 void runClojure(in ref Vars vars, in ref Opts opts)
 {
-    string[] cmd = [vars.javaCmd,
-                    vars.jvmCacheOpts.join(),
-                    opts.jvmOpts.join(),
-                    "-Dclojure.libfile=" ~ vars.libsFile,
-                    "-classpath", vars.cp,
-                    "clojure.main", vars.mainCacheOpts.join(),
-                    vars.args.join(" ")
-                   ].filter!(str => !str.empty).array;
+    auto cmd = [[vars.javaCmd],
+                vars.jvmCacheOpts,
+                opts.jvmOpts,
+                ["-Dclojure.libfile=" ~ vars.libsFile],
+                ["-classpath"],
+                [vars.cp],
+                ["clojure.main"],
+                vars.mainCacheOpts,
+                vars.args
+               ].join.filter!(str => !str.empty).array;
 
     execJava(cmd);
 }
