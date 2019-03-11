@@ -36,7 +36,6 @@ struct Vars
     string[] args;
     string installDir;
     string toolsCp;
-    string depsData;
     string configDir;
     string userCacheDir;
     string configStr;
@@ -244,10 +243,3 @@ void main(string[] args)
         runClojure(vars, opts);
     }
 }
-
-// void main()
-// {
-//     auto r = flatten(["a", "b", ["c", "d"]]);
-//     //auto r2 = flatten([0, 1, [2, 3]]);
-//     writeln("r = ", r);
-// }

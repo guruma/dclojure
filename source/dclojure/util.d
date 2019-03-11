@@ -186,8 +186,8 @@ string[] makeToolsArgs(in ref Vars vars, in ref Opts opts)
 {
     string[] toolsArgs;
 
-    if (!vars.depsData.empty())
-        toolsArgs ~= ["--config-data", vars.depsData];
+    if (!opts.depsData.empty())
+        toolsArgs ~= ["--config-data", opts.depsData];
 
     if (!opts.resolveAliases.empty)
         toolsArgs ~= ["-R" ~ opts.resolveAliases.join()];
